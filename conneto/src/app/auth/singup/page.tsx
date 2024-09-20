@@ -64,7 +64,7 @@ export default function Signup() {
           <p className="text-center text-gray-400 mb-6">Welcome to conneto</p>
 
           <div className="mb-4">
-            <h2 className="text-orange-400 font-semibold text-xl mb-2">Sign up</h2>
+            <h2 className="text-emerald-400 font-semibold text-xl mb-2">Sign up</h2>
             <label className="block text-gray-300 text-sm font-bold mb-2">
               Name 
             </label>

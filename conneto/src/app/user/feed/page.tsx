@@ -35,7 +35,7 @@ export default function Feed() {
       </Head>
       <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-gray-800">
         <header className="p-4 text-center">
-          <h1 className="text-3xl font-bold text-green-500">conneto</h1>
+          <h1 className="mb-2 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"><span className=" text-transparent bg-clip-text bg-gradient-to-r to-green-400 from-emerald-800">Conneto</span></h1>
         </header>
 
         <section className="px-4 mx-10">
@@ -85,14 +85,17 @@ export default function Feed() {
                         <p className="text-gray-500 text-sm">{post.time}</p>
                     </div>
                     <div className="flex space-x-4 items-center">
-                      <button>
-                        <FaHeart className="text-gray-500" size={24} />
+                      <button className='group relative active'>
+                        <FaHeart  className="text-gray-500 group-hover:text-pink-500 group-active:text-pink-700 transition duration-300 ease-in-out"
+                        size={24} />
                       </button>
-                    <button>
-                      <FaComment className="text-gray-500" size={24} />
+                    <button className='group relative'>
+                      <FaComment className="text-gray-500 group-hover:text-green-400 group-active:text-emerald-700 transition duration-300 ease-in-out"
+                      size={24} />
                     </button>
-                    <button>
-                      <FaLink className="text-gray-500" size={24} />
+                    <button className='group relative'>
+                      <FaLink  className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
+                      size={24} />
                     </button>
                     
                     </div>
@@ -102,19 +105,35 @@ export default function Feed() {
           ))}
         </section>
 
-        <nav className="fixed bottom-0 w-full bg-gray-900 py-2 flex justify-around items-center">
-          <button className="text-blue-500">
-            <AiFillHome className="text-gray-500" size={24}></AiFillHome>
+        <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
+        <button className="group relative">
+            <AiFillHome
+              className="text-blue-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
+              size={24}
+            />
           </button>
-          <button className="text-white">
-            <BsPlusCircle className="text-gray-500" size={24} />
+
+          <button className="group relative">
+            <BsPlusCircle
+              className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
+              size={24}
+            />
           </button>
-          <button className="text-white">
-            <IoMdNotifications className="text-gray-500" size={24} />
+
+          <button className="group relative">
+            <IoMdNotifications
+              className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
+              size={24}
+            />
           </button>
-          <button className="text-white">
-            <FaInbox className="text-gray-500" size={24} />
+
+          <button className="group relative">
+            <FaInbox
+              className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
+              size={24}
+            />
           </button>
+
         </nav>
       </div>
     </>

@@ -62,7 +62,7 @@ export default function Login() {
           <p className="text-center text-gray-400 mb-6">Welcome back to conneto</p>
 
           <div className="mb-4">
-            <h2 className="text-orange-400 font-semibold text-xl mb-2">Login</h2>
+            <h2 className="text-emerald-400 font-semibold text-xl mb-2">Login</h2>
             <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="email">
               Email 
             </label>
@@ -89,7 +89,7 @@ export default function Login() {
               required 
             />
             <div className="text-right mt-2">
-              <a href="#" className="text-sm text-orange-400 hover:underline">Forgot Password?</a>
+              <a href="#" className="text-sm text-emerald-500 hover:underline">Forgot Password?</a>
             </div>
           </div>
 
