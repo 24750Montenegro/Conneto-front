@@ -1,13 +1,17 @@
+'use client'
 import Head from 'next/head';
 import { FaHeart, FaComment, FaLink } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';   // Icono para Home
 import { BsPlusCircle } from 'react-icons/bs'; // Icono para Plus con Círculo
-import { FaInbox } from 'react-icons/fa';      // Icono para Bandeja de Entrada
+import { FaUserAstronaut } from 'react-icons/fa';      // Icono para Bandeja de Entrada
 import { IoMdNotifications } from 'react-icons/io'; // Icono para Notificaciones
-
+import  AlliesSection  from '../../components/AlliesSection'
+import { useRouter } from 'next/navigation';
 
 
 export default function Feed() {
+  const router = useRouter();
+
   const posts = [
     //reemplazar los siguientes datos con llamada al api
     {
@@ -38,27 +42,8 @@ export default function Feed() {
           <h1 className="mb-2 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"><span className=" text-transparent bg-clip-text bg-gradient-to-r to-green-400 from-emerald-800">Conneto</span></h1>
         </header>
 
-        <section className="px-4 mx-10">
-          <h2 className="text-green-400 font-semibold text-lg">Tus Aliados</h2>
-          <div className="flex items-center space-x-4 mt-4 overflow-x-auto scrollbar-hide">
-            <button className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-2xl text-white hover:bg-gray-800">
-              +
-            </button>
-            {/* Lista de aliados, reemplazar con llamada al api */}
-            {["https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?b=1&s=612x612&w=0&k=20&c=hEPh7-WEAqHTHdQtPrfEN9-yYCiPGKvD32VZ5lcL6SU=",
-             "https://portal.bilardo.gov.tr/assets/pages/media/profile/profile_user.jpg", 
-             "https://images.pexels.com/photos/1310522/pexels-photo-1310522.jpeg?cs=srgb&dl=pexels-george-dolgikh-551816-1310522.jpg&fm=jpg"
-            ].map((ally, index) => (
-              <div key={index} className="flex-shrink-0">
-                <img
-                  className="w-12 h-12 rounded-full border-2 border-gray-700 object-cover	"
-                  src={ally}
-                  alt={`Aliado ${index + 1}`}
-                />
-              </div>
-            ))}
-          </div>
-        </section>
+        <AlliesSection allies={posts} />
+
 
         <section className="mt-6 space-y-6 grid items-center justify-center mb-8">
           {posts.map((post) => (
@@ -113,7 +98,7 @@ export default function Feed() {
             />
           </button>
 
-          <button className="group relative">
+          <button className="group relative" onClick={() =>   router.push('/user/post')}>
             <BsPlusCircle
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
               size={24}
@@ -127,8 +112,8 @@ export default function Feed() {
             />
           </button>
 
-          <button className="group relative">
-            <FaInbox
+          <button className="group relative" onClick={() =>   router.push('/user/profile')}>
+            <FaUserAstronaut
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
               size={24}
             />
