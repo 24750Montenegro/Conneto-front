@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
 import { AiFillHome } from "react-icons/ai";
 import { IoMdNotifications } from "react-icons/io";
-import { FaInbox } from "react-icons/fa";
 import { BsPlusCircle } from "react-icons/bs";
 import  AlliesSection  from '../../components/AlliesSection'
 import { FaUserAstronaut } from 'react-icons/fa';  
