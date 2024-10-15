@@ -1,5 +1,6 @@
 'use client'
 import Head from 'next/head';
+import { useState } from 'react'; // Importar el hook useState para el manejo de estado
 import { FaHeart, FaComment, FaLink } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';   // Icono para Home
 import { BsPlusCircle } from 'react-icons/bs'; // Icono para Plus con Círculo
@@ -8,9 +9,17 @@ import { IoMdNotifications } from 'react-icons/io'; // Icono para Notificaciones
 import  AlliesSection  from '../../components/AlliesSection'
 import { useRouter } from 'next/navigation';
 
+// Definir el tipo de activeComments
+interface ActiveCommentsState {
+  [key: number]: boolean;  // Las claves son números (post.id) y los valores son booleanos
+}
 
 export default function Feed() {
   const router = useRouter();
+
+  // Estado para controlar si se muestran los comentarios de cada post
+  const [activeComments, setActiveComments] = useState<ActiveCommentsState>({}); // Se inicializa como un objeto vacío
+
 
   const posts = [
     //reemplazar los siguientes datos con llamada al api
@@ -21,6 +30,10 @@ export default function Feed() {
       text: "Nuevo proyecto de infraestructura e innovación enfocado en el desarrollo sostenible...",
       image: "https://media.licdn.com/dms/image/v2/C5112AQGo5l3-KAnMDA/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520179677776?e=2147483647&v=beta&t=OdR4prUuAWvXWcFKZJJwk8GbJD5vTgdW15QLMz4liiE", // reemplazar con la URL de la imagen real
       avatar: "https://portal.bilardo.gov.tr/assets/pages/media/profile/profile_user.jpg",  // reemplazar con la URL del avatar
+      comments: [
+        {id:1, username: "Sophia", text: "¡Ingreible proyecto, felicidades!"},
+        {id:2, username: "John", text: "¿Como puedo participar?"}
+      ]
     },
     {
       id: 2,
@@ -29,8 +42,20 @@ export default function Feed() {
       text: "Increíble proyecto de conservación marina...",
       image: "https://image.isu.pub/140225055437-5426fdab6f7587eb5fd4b7ccedf38aea/jpg/page_1_thumb_large.jpg", 
       avatar: "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?b=1&s=612x612&w=0&k=20&c=hEPh7-WEAqHTHdQtPrfEN9-yYCiPGKvD32VZ5lcL6SU=",  
+      comments: [
+        {id:1, username: "Laura", text: "Que gran idiciativa, gracias por compartir."}
+      ]
     },
   ];
+
+  // Función para alternar el menú de comentarios
+  const toggleComments = (postId: number) => {
+    console.log(`Toggling comments for post ${postId}`); // Para verificar si se activa correctamente
+    setActiveComments((prevState) => ({
+      ...prevState,
+      [postId]: !prevState[postId], // Cambia el valor booleano del postId
+    }));
+  };
 
   return (
     <>
@@ -74,7 +99,7 @@ export default function Feed() {
                         <FaHeart  className="text-gray-500 group-hover:text-pink-500 group-active:text-pink-700 transition duration-300 ease-in-out"
                         size={24} />
                       </button>
-                    <button className='group relative'>
+                    <button className='group relative' onClick={() => toggleComments(post.id)}>
                       <FaComment className="text-gray-500 group-hover:text-green-400 group-active:text-emerald-700 transition duration-300 ease-in-out"
                       size={24} />
                     </button>
@@ -85,6 +110,19 @@ export default function Feed() {
                     
                     </div>
                 </div>
+
+              {/* Renderizar los comentarios si están activos */}
+              {activeComments[post.id] && post.comments && post.comments.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  {post.comments.map((comment) => (
+                    <div key={comment.id} className="bg-gray-800 p-2 rounded-lg">
+                      <p className="text-sm text-gray-400">
+                        <span className="font-bold text-white">{comment.username}:</span> {comment.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
 
             </div>
           ))}
