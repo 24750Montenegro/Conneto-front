@@ -121,9 +121,16 @@ export default function Feed() {
                       </p>
                     </div>
                   ))}
+                  {/* Caja de texto para agregar nuevo comentario */}
+                  <div className="mt-4">
+                    <textarea
+                      className="w-full bg-gray-800 text-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Escribe un comentario..."
+                      rows={2}
+                    />
+                  </div>
                 </div>
               )}
-
             </div>
           ))}
         </section>
