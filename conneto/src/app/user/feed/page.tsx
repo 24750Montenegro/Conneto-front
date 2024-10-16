@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { FaHeart, FaComment, FaLink } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';   // Icono para Home
 import { BsPlusCircle } from 'react-icons/bs'; // Icono para Plus con Círculo
-import { FaUserAstronaut } from 'react-icons/fa';      // Icono para Bandeja de Entrada
+import { FaUserAstronaut } from 'react-icons/fa';   
 import { IoMdNotifications } from 'react-icons/io'; // Icono para Notificaciones
 import  AlliesSection  from '../../components/AlliesSection'
 import { useRouter } from 'next/navigation';

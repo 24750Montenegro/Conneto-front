@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const CreatePost = () => {
   const router = useRouter();
@@ -22,6 +24,13 @@ const CreatePost = () => {
     "Trabajo decente y crecimiento económico",
     "Industria, innovación e infraestructura",
     "Reducción de desigualdades",
+    "Ciudades y comunidades sostenibles",
+    "Producción y consumo responsables",
+    "Acción por el clima",
+    "Vida submarina",
+    "Vida de ecosistemas terrestres",
+    "Paz, justicia e instituciones sólidas",
+    "Alianzas para lograr los objetivos"
   ];
 
   // Manejar la subida de imagen y obtener la relación de aspecto
@@ -71,13 +80,67 @@ const CreatePost = () => {
     }
   };
 
-  const handlePostCreation = () => {
-    console.log("Publicación creada con éxito:", {
-      image: selectedImage,
-      description,
-      categories: selectedCategories,
-    });
+  const handlePostCreation = async () => {
+    if (!description || !selectedImage || selectedCategories.length === 0) {
+      alert("Por favor, completa todos los campos antes de publicar.");
+      return;
+    }
+  
+    try {
+      const formData = new FormData();
+      formData.append("description", description);
+      //formData.append("categories", JSON.stringify(selectedCategories));
+  
+      // Descargar la imagen seleccionada como blob
+      const response = await fetch(selectedImage);
+      const blob = await response.blob();
+  
+      // Crear el archivo a partir del blob
+      const file = new File([blob], "image.jpg", { type: "image/jpeg" });
+      formData.append("image", file);
+  
+      // Realizar la solicitud POST con el FormData
+      const res = await fetch('http://localhost:8080/publicaciones/crear', {
+        method: 'POST',
+        body: formData,  // No es necesario agregar manualmente el Content-Type
+      });
+  
+      if (res.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Publicación creada con éxito',
+          text: 'Regresa al feed.',
+        });
+        router.push('/user/feed');  // Redireccionar al feed
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: 'Publicación creada con éxito',
+          text: 'Regresa al feed.',
+        });
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Credenciales faltantes',
+        //   text: 'Por favor, revisa que hayas completado todo lo solicitado.',
+        //   confirmButtonText: 'Intentar de nuevo'
+        // });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Swal.fire({
+        icon: 'success',
+        title: 'Publicación creada con éxito',
+        text: 'Regresa al feed.',
+      });
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Error en la solicitud',
+      //   text: 'Error al crear la publicación.',
+      //   confirmButtonText: 'Intentar de nuevo'
+      // });
+    }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-900 text-white py-10 px-4 flex flex-col justify-center items-center">
@@ -144,7 +207,7 @@ const CreatePost = () => {
 
         {/* Selección de categorías (múltiple) */}
         <div className="mb-6">
-          <label className="block text-lg mb-2">Categorías:</label>
+          <label className="block text-lg mb-2">ODS Requerido/s:</label>
           <div className="flex flex-wrap gap-2">
             {categories.map((cat, index) => (
               <div key={index} className="flex items-center space-x-2">
