@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const CreatePost = () => {
   const router = useRouter();
@@ -96,25 +98,40 @@ const CreatePost = () => {
       const file = new File([blob], "image.jpg", { type: "image/jpeg" });
       formData.append("image", file);
   
-      const res = await fetch('http://localhost:3000/user/post', {
+      const res = await fetch('http://localhost:8080/publicaciones/crear', {
         method: 'POST',
         body: formData,
       });
   
       if (res.ok) 
         {
-        alert("Publicación creada con éxito");
+        Swal.fire({
+          icon: 'success',
+          title: 'Publicación creada con éxito',
+          text: 'Regresa al feed.',
+          
+        });
         router.push('/user/feed'); 
       } 
       else 
       {
-        alert("Error al crear la publicación.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Credenciales faltantes',
+          text: 'Por favor, revisa que hayas completado todo lo solicitado.',
+          confirmButtonText: 'Intentar de nuevo'
+        });
       }
     } 
     catch (error) 
     {
-      console.error("Error al crear la publicación:", error);
-      alert("Error en la solicitud. Intenta nuevamente.");
+      console.error("Error:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en la solicitud',
+        text: 'Error al crear la publicación.',
+        confirmButtonText: 'Intentar de nuevo'
+      });
     }
   };    
 
