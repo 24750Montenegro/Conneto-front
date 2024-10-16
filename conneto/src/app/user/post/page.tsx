@@ -81,40 +81,38 @@ const CreatePost = () => {
   };
 
   const handlePostCreation = async () => {
-    if (!description || !selectedImage || selectedCategories.length === 0) 
-      {
+    if (!description || !selectedImage || selectedCategories.length === 0) {
       alert("Por favor, completa todos los campos antes de publicar.");
       return;
     }
   
-    try 
-    {
+    try {
       const formData = new FormData();
       formData.append("description", description);
-      //formData.append("categories", JSON.stringify(selectedCategories));
-      
+      formData.append("categories", JSON.stringify(selectedCategories));
+  
+      // Descargar la imagen seleccionada como blob
       const response = await fetch(selectedImage);
       const blob = await response.blob();
+  
+      // Crear el archivo a partir del blob
       const file = new File([blob], "image.jpg", { type: "image/jpeg" });
       formData.append("image", file);
   
+      // Realizar la solicitud POST con el FormData
       const res = await fetch('http://localhost:8080/publicaciones/crear', {
         method: 'POST',
-        body: formData,
+        body: formData,  // No es necesario agregar manualmente el Content-Type
       });
   
-      if (res.ok) 
-        {
+      if (res.ok) {
         Swal.fire({
           icon: 'success',
           title: 'Publicación creada con éxito',
           text: 'Regresa al feed.',
-          
         });
-        router.push('/user/feed'); 
-      } 
-      else 
-      {
+        router.push('/user/feed');  // Redireccionar al feed
+      } else {
         Swal.fire({
           icon: 'error',
           title: 'Credenciales faltantes',
@@ -122,9 +120,7 @@ const CreatePost = () => {
           confirmButtonText: 'Intentar de nuevo'
         });
       }
-    } 
-    catch (error) 
-    {
+    } catch (error) {
       console.error("Error:", error);
       Swal.fire({
         icon: 'error',
@@ -133,7 +129,8 @@ const CreatePost = () => {
         confirmButtonText: 'Intentar de nuevo'
       });
     }
-  };    
+  };
+  
 
   return (
     <div className="min-h-screen bg-gray-900 text-white py-10 px-4 flex flex-col justify-center items-center">
