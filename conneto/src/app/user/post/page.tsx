@@ -80,7 +80,8 @@ const CreatePost = () => {
     }
   };
 
-  const handlePostCreation = async () => {
+  const handlePostCreation = async () => 
+  {
     if (!description || !selectedImage || selectedCategories.length === 0) 
       {
       alert("Por favor, completa todos los campos antes de publicar.");
@@ -95,17 +96,35 @@ const CreatePost = () => {
       
       const response = await fetch(selectedImage);
       const blob = await response.blob();
-      const file = new File([blob], "image.jpg", { type: "image/jpeg" });
-      formData.append("image", file);
+
+    // Verificar si el tipo de archivo es una imagen permitida
+    const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'image/bmp'];
+    
+    if (!allowedImageTypes.includes(blob.type)) 
+    {
+      Swal.fire(
+      {
+        icon: 'error',
+        title: 'Formato de imagen no permitido',
+        text: `El formato de imagen ` + blob.type + ` no es soportado. Por favor, selecciona un archivo válido (png, jpg, jpeg, webp, etc.).`,
+        confirmButtonText: 'Intentar de nuevo'
+      });
+      return;
+    }
+
+    const file = new File([blob], `image.${blob.type.split('/')[1]}`, { type: blob.type });
+    formData.append("image", file);
   
-      const res = await fetch('http://localhost:8080/publicaciones/crear', {
+      const res = await fetch('http://localhost:8080/publicaciones/crear', 
+      {
         method: 'POST',
         body: formData,
       });
   
       if (res.ok) 
         {
-        Swal.fire({
+        Swal.fire(
+        {
           icon: 'success',
           title: 'Publicación creada con éxito',
           text: 'Regresa al feed.',
@@ -115,7 +134,8 @@ const CreatePost = () => {
       } 
       else 
       {
-        Swal.fire({
+        Swal.fire(
+        {
           icon: 'error',
           title: 'Credenciales faltantes',
           text: 'Por favor, revisa que hayas completado todo lo solicitado.',
