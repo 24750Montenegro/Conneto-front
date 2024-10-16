@@ -1,9 +1,11 @@
+"use client"
+
 import { useState } from "react";
 
 const ModalForm = ({ isOpen, onClose }) => {
+  const [isOds, setOds] = useState('');
+
     if (!isOpen) return null;
-    const [isOds, setOds] = useState('');
-    var ODS = []
 
     const handleSelectCategorie = ()=> {
       
