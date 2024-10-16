@@ -91,7 +91,7 @@ const CreatePost = () => {
     {
       const formData = new FormData();
       formData.append("description", description);
-      formData.append("categories", JSON.stringify(selectedCategories));
+      //formData.append("categories", JSON.stringify(selectedCategories));
       
       const response = await fetch(selectedImage);
       const blob = await response.blob();
