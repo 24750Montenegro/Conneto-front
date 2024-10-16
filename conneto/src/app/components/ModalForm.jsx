@@ -7,9 +7,6 @@ const ModalForm = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-    const handleSelectCategorie = ()=> {
-      
-    }
   
     const categories = [
       "Fin de la pobreza",
