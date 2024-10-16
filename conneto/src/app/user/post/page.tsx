@@ -22,6 +22,13 @@ const CreatePost = () => {
     "Trabajo decente y crecimiento económico",
     "Industria, innovación e infraestructura",
     "Reducción de desigualdades",
+    "Ciudades y comunidades sostenibles",
+    "Producción y consumo responsables",
+    "Acción por el clima",
+    "Vida submarina",
+    "Vida de ecosistemas terrestres",
+    "Paz, justicia e instituciones sólidas",
+    "Alianzas para lograr los objetivos"
   ];
 
   // Manejar la subida de imagen y obtener la relación de aspecto
@@ -71,13 +78,45 @@ const CreatePost = () => {
     }
   };
 
-  const handlePostCreation = () => {
-    console.log("Publicación creada con éxito:", {
-      image: selectedImage,
-      description,
-      categories: selectedCategories,
-    });
-  };
+  const handlePostCreation = async () => {
+    if (!description || !selectedImage || selectedCategories.length === 0) 
+      {
+      alert("Por favor, completa todos los campos antes de publicar.");
+      return;
+    }
+  
+    try 
+    {
+      const formData = new FormData();
+      formData.append("description", description);
+      formData.append("categories", JSON.stringify(selectedCategories));
+      
+      const response = await fetch(selectedImage);
+      const blob = await response.blob();
+      const file = new File([blob], "image.jpg", { type: "image/jpeg" });
+      formData.append("image", file);
+  
+      const res = await fetch('http://localhost:3000/user/post', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (res.ok) 
+        {
+        alert("Publicación creada con éxito");
+        router.push('/user/feed'); 
+      } 
+      else 
+      {
+        alert("Error al crear la publicación.");
+      }
+    } 
+    catch (error) 
+    {
+      console.error("Error al crear la publicación:", error);
+      alert("Error en la solicitud. Intenta nuevamente.");
+    }
+  };    
 
   return (
     <div className="min-h-screen bg-gray-900 text-white py-10 px-4 flex flex-col justify-center items-center">
@@ -144,7 +183,7 @@ const CreatePost = () => {
 
         {/* Selección de categorías (múltiple) */}
         <div className="mb-6">
-          <label className="block text-lg mb-2">Categorías:</label>
+          <label className="block text-lg mb-2">ODS Requerido/s:</label>
           <div className="flex flex-wrap gap-2">
             {categories.map((cat, index) => (
               <div key={index} className="flex items-center space-x-2">
