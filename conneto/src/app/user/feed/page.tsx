@@ -7,30 +7,64 @@ import { FaUserAstronaut } from 'react-icons/fa';
 import { IoMdNotifications } from 'react-icons/io'; // Icono para Notificaciones
 import  AlliesSection  from '../../components/AlliesSection'
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
-
-export default function Feed() {
+export default function Feed() 
+{
   const router = useRouter();
 
-  const posts = [
-    //reemplazar los siguientes datos con llamada al api
+  //Estado inicial de los valores como ejemplo
+  const [posts, setPosts] = useState([
+  {
+    id: 1,
+    username: "James",
+    time: "1 hour ago",
+    text: "Nuevo proyecto de infraestructura e innovación enfocado en el desarrollo sostenible...",
+    image: "https://media.licdn.com/dms/image/v2/C5112AQGo5l3-KAnMDA/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520179677776?e=2147483647&v=beta&t=OdR4prUuAWvXWcFKZJJwk8GbJD5vTgdW15QLMz4liiE", // reemplazar con la URL de la imagen real
+    avatar: "https://portal.bilardo.gov.tr/assets/pages/media/profile/profile_user.jpg",
+  },
+  {
+    id: 2,
+    username: "Anna",
+    time: "2 hours ago",
+    text: "Increíble proyecto de conservación marina...",
+    image: "https://image.isu.pub/140225055437-5426fdab6f7587eb5fd4b7ccedf38aea/jpg/page_1_thumb_large.jpg", 
+    avatar: "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?b=1&s=612x612&w=0&k=20&c=hEPh7-WEAqHTHdQtPrfEN9-yYCiPGKvD32VZ5lcL6SU=",  
+  },
+  ]);
+
+  // Llamada a la API cuando ya tiene valores
+  useEffect(() => 
+  {
+    const fetchPosts = async () => 
     {
-      id: 1,
-      username: "James",
-      time: "1 hour ago",
-      text: "Nuevo proyecto de infraestructura e innovación enfocado en el desarrollo sostenible...",
-      image: "https://media.licdn.com/dms/image/v2/C5112AQGo5l3-KAnMDA/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520179677776?e=2147483647&v=beta&t=OdR4prUuAWvXWcFKZJJwk8GbJD5vTgdW15QLMz4liiE", // reemplazar con la URL de la imagen real
-      avatar: "https://portal.bilardo.gov.tr/assets/pages/media/profile/profile_user.jpg",  // reemplazar con la URL del avatar
-    },
-    {
-      id: 2,
-      username: "Anna",
-      time: "2 hours ago",
-      text: "Increíble proyecto de conservación marina...",
-      image: "https://image.isu.pub/140225055437-5426fdab6f7587eb5fd4b7ccedf38aea/jpg/page_1_thumb_large.jpg", 
-      avatar: "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?b=1&s=612x612&w=0&k=20&c=hEPh7-WEAqHTHdQtPrfEN9-yYCiPGKvD32VZ5lcL6SU=",  
-    },
-  ];
+      try 
+      {
+        const response = await fetch('http://localhost:8080/publicaciones/todas');
+        const data = await response.json();
+
+        // Mapea los datos obtenidos y asegúrate de que coincidan con la estructura requerida
+        const updatedPosts = data.map((post: { id: any; username: any; time: any; text: any; image: any; avatar: any; }) => (
+        {
+          id: post.id,
+          username: post.username,
+          time: post.time,
+          text: post.text,
+          image: post.image,
+          avatar: post.avatar
+        }));
+
+        // Actualizar
+        setPosts(updatedPosts);
+      } 
+      catch (error) 
+      {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   return (
     <>
@@ -49,7 +83,7 @@ export default function Feed() {
           {posts.map((post) => (
             <div key={post.id} className="bg-gray-900 bg-zinc-900 p-4 rounded-3xl shadow-lg max-w-xl w-full">
               <div className="flex items-center space-x-4">
-               
+              
               </div> 
               <img
                 className="w-full h-full object-cover rounded-xl mt-2"
@@ -57,13 +91,13 @@ export default function Feed() {
                 alt="Post image"
               />
               <p className="text-gray-300 mt-2">{post.text} <span className="text-blue-500 cursor-pointer">ver más</span></p>
-             
+              
               <img
                   className="w-10 h-10 rounded-full object-cover	"
                   src={post.avatar}
                   alt={`${post.username}'s avatar`}
                 />
-               
+                
                 <div className="flex items-center justify-between">
                     <div className="flex-grow">
                         <p className="text-white font-semibold">{post.username} <span className="text-blue-500">✔</span></p>
