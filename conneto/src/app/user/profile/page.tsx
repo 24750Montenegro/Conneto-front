@@ -1,13 +1,10 @@
-"use client";
-
+'use client'
 import { AiFillHome } from "react-icons/ai";
 import { IoMdNotifications } from "react-icons/io";
 import { BsPlusCircle } from "react-icons/bs";
 import  AlliesSection  from '../../components/AlliesSection'
 import { FaUserAstronaut } from 'react-icons/fa';  
 import { useRouter } from 'next/navigation';
-
-
 
 const UserProfile = () => {
   const router = useRouter();
