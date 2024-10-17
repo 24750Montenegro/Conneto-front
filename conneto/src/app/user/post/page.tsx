@@ -12,6 +12,10 @@ const CreatePost = () => {
   const [description, setDescription] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [dragActive, setDragActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // Tamaño máximo: 5MB
+  const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
 
   const categories = [
     "Fin de la pobreza",
@@ -33,33 +37,53 @@ const CreatePost = () => {
     "Alianzas para lograr los objetivos"
   ];
 
-  // Manejar la subida de imagen y obtener la relación de aspecto
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const image = new Image();
-      image.src = URL.createObjectURL(file);
-      image.onload = () => {
-        const aspectRatio = image.width / image.height;
-        setImageAspectRatio(aspectRatio);
-        setSelectedImage(image.src);
-      };
+    if (!file) return;
+
+    // Validar el tipo de archivo
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      Swal.fire({
+        icon: "error",
+        title: "Formato no permitido",
+        text: `Solo se permiten archivos de tipo: ${ALLOWED_TYPES.join(", ")}.`,
+        confirmButtonText: "Intentar de nuevo",
+      });
+      return;
     }
+
+    // Validar el tamaño del archivo
+    if (file.size > MAX_FILE_SIZE) {
+      Swal.fire({
+        icon: "error",
+        title: "Archivo demasiado grande",
+        text: "El archivo excede el tamaño máximo de 5MB. Por favor, selecciona un archivo más pequeño.",
+        confirmButtonText: "Intentar de nuevo",
+      });
+      return;
+    }
+
+    // Previsualización de la imagen
+    const image = new Image();
+    image.src = URL.createObjectURL(file);
+    image.onload = () => {
+      const aspectRatio = image.width / image.height;
+      setImageAspectRatio(aspectRatio);
+      setSelectedImage(image.src);
+    };
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setDragActive(false);
     const file = e.dataTransfer.files[0];
-    if (file) {
-      const image = new Image();
-      image.src = URL.createObjectURL(file);
-      image.onload = () => {
-        const aspectRatio = image.width / image.height;
-        setImageAspectRatio(aspectRatio);
-        setSelectedImage(image.src);
-      };
-    }
+    
+    // Crear un evento simulado y convertir a ChangeEvent
+    const fakeEvent = {
+      target: { files: [file] },
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
+    
+    handleImageUpload(fakeEvent);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -71,7 +95,6 @@ const CreatePost = () => {
     setDragActive(false);
   };
 
-  // Manejar la selección múltiple de categorías
   const handleCategoryChange = (category: string) => {
     if (selectedCategories.includes(category)) {
       setSelectedCategories(selectedCategories.filter((cat) => cat !== category));
@@ -82,71 +105,66 @@ const CreatePost = () => {
 
   const handlePostCreation = async () => {
     if (!description || !selectedImage || selectedCategories.length === 0) {
-      alert("Por favor, completa todos los campos antes de publicar.");
+      Swal.fire({
+        icon: "warning",
+        title: "Campos incompletos",
+        text: "Por favor, completa todos los campos antes de publicar.",
+        confirmButtonText: "Intentar de nuevo",
+      });
       return;
     }
-  
+
+    setIsLoading(true); // Iniciar el estado de carga
+
     try {
       const formData = new FormData();
       formData.append("description", description);
-      //formData.append("categories", JSON.stringify(selectedCategories));
-  
-      // Descargar la imagen seleccionada como blob
+      formData.append("categories", JSON.stringify(selectedCategories));
+
       const response = await fetch(selectedImage);
       const blob = await response.blob();
-  
-      // Crear el archivo a partir del blob
-      const file = new File([blob], "image.jpg", { type: "image/jpeg" });
+      const file = new File([blob], `image.${blob.type.split("/")[1]}`, { type: blob.type });
       formData.append("image", file);
-  
-      // Realizar la solicitud POST con el FormData
-      const res = await fetch('http://localhost:8080/publicaciones/crear', {
-        method: 'POST',
-        body: formData,  // No es necesario agregar manualmente el Content-Type
+
+      const res = await fetch("http://localhost:8080/publicaciones/crear", {
+        method: "POST",
+        body: formData,
       });
-  
+
       if (res.ok) {
         Swal.fire({
-          icon: 'success',
-          title: 'Publicación creada con éxito',
-          text: 'Regresa al feed.',
+          icon: "success",
+          title: "Publicación creada con éxito",
+          text: "Regresa al feed.",
         });
-        router.push('/user/feed');  // Redireccionar al feed
+        router.push("/user/feed");
       } else {
         Swal.fire({
-          icon: 'success',
-          title: 'Publicación creada con éxito',
-          text: 'Regresa al feed.',
+          icon: "error",
+          title: "Error al crear la publicación",
+          text: "Ocurrió un error al enviar los datos. Inténtalo de nuevo.",
+          confirmButtonText: "Intentar de nuevo",
         });
-        // Swal.fire({
-        //   icon: 'error',
-        //   title: 'Credenciales faltantes',
-        //   text: 'Por favor, revisa que hayas completado todo lo solicitado.',
-        //   confirmButtonText: 'Intentar de nuevo'
-        // });
       }
     } catch (error) {
       console.error("Error:", error);
       Swal.fire({
-        icon: 'success',
-        title: 'Publicación creada con éxito',
-        text: 'Regresa al feed.',
+        icon: "error",
+        title: "Error de red",
+        text: "Error al intentar crear la publicación. Verifica tu conexión.",
+        confirmButtonText: "Intentar de nuevo",
       });
-      // Swal.fire({
-      //   icon: 'error',
-      //   title: 'Error en la solicitud',
-      //   text: 'Error al crear la publicación.',
-      //   confirmButtonText: 'Intentar de nuevo'
-      // });
+    } finally {
+      setIsLoading(false); // Finalizar el estado de carga
     }
-  };
-  
+  };   
 
   return (
     <div className="min-h-screen bg-gray-900 text-white py-10 px-4 flex flex-col justify-center items-center">
       {/* Botón para regresar al perfil */}
       <div className="w-full max-w-3xl mb-4">
-        <button className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" onClick={() =>   router.push('/user/feed')}>
+        <button className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" 
+        onClick={() =>  router.push('/user/feed')}>
           ← Regresar al feed
         </button>
       </div>
@@ -232,7 +250,7 @@ const CreatePost = () => {
           onClick={handlePostCreation}
           className="w-full py-3 bg-green-500 hover:bg-green-600 rounded-lg text-lg font-semibold transition duration-300"
         >
-          Publicar
+          {isLoading ? "Publicando..." : "Publicar"}
         </button>
       </div>
     </div>
