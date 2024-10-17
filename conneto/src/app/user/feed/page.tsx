@@ -33,37 +33,37 @@ export default function Feed()
   },
   ]);
 
-  // Llamada a la API cuando ya tiene valores
+  const fetchPosts = async () => 
+  {
+    try 
+    {
+      const response = await fetch('http://localhost:8080/publicaciones/todas');
+      const data = await response.json();
+
+      // Mapea los datos obtenidos y asegúrate de que coincidan con la estructura requerida
+      const updatedPosts = data.map((post: { id: any; username: any; time: any; text: any; image: any; avatar: any; }) => (
+      {
+        id: post.id,
+        username: post.username,
+        time: post.time,
+        text: post.text,
+        image: post.image,
+        avatar: post.avatar
+      }));
+      setPosts(updatedPosts);
+    } 
+    catch (error) 
+    {
+      console.error('Error fetching posts:', error);
+    }
+  };
+  
+  // Polling para obtener las publicaciones cada 5 segundos
   useEffect(() => 
   {
-    const fetchPosts = async () => 
-    {
-      try 
-      {
-        const response = await fetch('http://localhost:8080/publicaciones/todas');
-        const data = await response.json();
-
-        // Mapea los datos obtenidos y asegúrate de que coincidan con la estructura requerida
-        const updatedPosts = data.map((post: { id: any; username: any; time: any; text: any; image: any; avatar: any; }) => (
-        {
-          id: post.id,
-          username: post.username,
-          time: post.time,
-          text: post.text,
-          image: post.image,
-          avatar: post.avatar
-        }));
-
-        // Actualizar
-        setPosts(updatedPosts);
-      } 
-      catch (error) 
-      {
-        console.error('Error fetching posts:', error);
-      }
-    };
-
-    fetchPosts();
+    fetchPosts(); // Primera carga
+    const intervalId = setInterval(fetchPosts, 5000);
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
