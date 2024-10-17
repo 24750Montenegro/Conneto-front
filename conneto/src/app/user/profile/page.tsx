@@ -57,7 +57,7 @@ const UserProfile = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem('token');
-        router.push('/login');
+        router.push('/auth/login');
       }
     });
   };

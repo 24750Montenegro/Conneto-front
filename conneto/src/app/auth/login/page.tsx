@@ -24,7 +24,15 @@ export default function Login() {
       });
 
       if (response.ok) {
-        //const data = await response.json();
+            const usuario = await response.json();
+            // Crear el token con id y email
+            const token = {
+              id: usuario.id,   // Asegúrate de que "id" sea un campo en el objeto Usuario
+              email: usuario.email, // Asegúrate de que "email" sea un campo en el objeto Usuario
+            };
+
+          // Guardar el token como un string JSON en el localStorage
+          localStorage.setItem('token', JSON.stringify(token));
         Swal.fire({
           icon: 'success',
           title: 'Login exitoso',
