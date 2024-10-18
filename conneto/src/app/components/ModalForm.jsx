@@ -24,43 +24,43 @@ const ModalForm = ({ isOpen, onClose }) => {
       "Reducción de desigualdades",
     ];
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white p-6 rounded-lg w-96">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Crea tu nuevo proyecto</h2>
+      <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+        <div className="bg-slate-900 p-6 rounded-lg w-96">
+          <h2 className="text-xl font-semibold mb-4 text-green-600">Crea tu nuevo proyecto</h2>
           <form>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label className="block text-white-600 text-sm font-semibold mb-2">
                 Nombre del proyecto
               </label>
               <input
                 type="text"
                 id="nombre"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="w-full p-1 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label className="block text-white-600 text-sm font-semibold mb-2">
                 Descripcion del proyecto
               </label>
               <input
                 type="textarea"
                 id="correo"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block text-white-600 text-sm font-semibold mb-2">
                 ODS que trabaja el proyecto
               </label>
               {categories.map((cat, index) => (
-              <div key={index} className="flex items-center space-x-2">
+              <div key={index} className="text-white flex items-center space-x-2 ">
                 <input
                   type="checkbox"
                   id={`category-${index}`}
                   value={isOds}
                   onChange={() => setOds(isOds)}
-                  className="h-5 w-5 text-green-500 bg-gray-700 border-gray-600 rounded"
+                  className="h-5 w-5 text-green-500 bg-green-700 border-green-600 rounded "
                 />
-                <label htmlFor={`category-${index}`} className="text-sm text-black">
+                <label htmlFor={`category-${index}`} className="text-sm">
                   {cat}
                 </label>
               </div>
