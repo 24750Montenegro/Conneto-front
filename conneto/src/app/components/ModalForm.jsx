@@ -22,6 +22,13 @@ const ModalForm = ({ isOpen, onClose }) => {
       "Trabajo decente y crecimiento económico",
       "Industria, innovación e infraestructura",
       "Reducción de desigualdades",
+      "Ciudades y comunidades sotenibles",
+      "Producción y consumo responables",
+      "Acción por el clima",
+      "Vida submarina",
+      "Vida de ecosistemas terrestres",
+      "Paz, justicia e instituciones sólidas",
+      "Alianzas para lograr los objetivos"
     ];
     return (
       <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
