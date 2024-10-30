@@ -8,18 +8,65 @@ import { FaUserAstronaut } from 'react-icons/fa';
 import { IoMdNotifications } from 'react-icons/io'; // Icono para Notificaciones
 import  AlliesSection  from '../../components/AlliesSection'
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
-// Definir el tipo de activeComments
+interface Comment {
+  id: number;
+  username: string;
+  text: string;
+}
+
 interface ActiveCommentsState {
-  [key: number]: boolean;  // Las claves son números (post.id) y los valores son booleanos
+  [key: number]: boolean;
+}
+
+interface CommentsState {
+  [key: number]: Comment[];
 }
 
 export default function Feed() {
   const router = useRouter();
+  const [activeComments, setActiveComments] = useState<ActiveCommentsState>({});
+  const [comments, setComments] = useState<CommentsState>({});
+  const [visibleCommentsCount, setVisibleCommentsCount] = useState<{ [key: number]: number }>({});
 
-  // Estado para controlar si se muestran los comentarios de cada post
-  const [activeComments, setActiveComments] = useState<ActiveCommentsState>({}); // Se inicializa como un objeto vacío
+  const fetchComments = async (postId: number) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/comentarios/${postId}?cantidad=3`);
+      setComments((prev) => ({
+        ...prev,
+        [postId]: response.data as Comment[],
+      }));
+    } catch (error) {
+      console.error("Error al obtener comentarios:", error);
+    }
+  };
+  
 
+  const toggleComments = (postId: number) => {
+    setActiveComments((prevState) => ({
+      ...prevState,
+      [postId]: !prevState[postId],
+    }));
+
+    if (!activeComments[postId]) {
+      fetchComments(postId);
+    }
+  };
+
+  const handleAddComment = async (postId: number, text: string) => {
+    if (!text.trim()) return; // Evita enviar comentarios vacíos
+    try {
+      await axios.post("http://localhost:8080/comentarios/guardarComentario", {
+        publicacion: { id: postId },
+        contenido: text
+      });
+      fetchComments(postId); // Actualiza los comentarios después de agregar uno nuevo
+    } catch (error) {
+      console.error("Error al agregar comentario:", error);
+    }
+  };
+  
 
   const posts = [
     //reemplazar los siguientes datos con llamada al api
@@ -47,15 +94,6 @@ export default function Feed() {
       ]
     },
   ];
-
-  // Función para alternar el menú de comentarios
-  const toggleComments = (postId: number) => {
-    console.log(`Toggling comments for post ${postId}`); // Para verificar si se activa correctamente
-    setActiveComments((prevState) => ({
-      ...prevState,
-      [postId]: !prevState[postId], // Cambia el valor booleano del postId
-    }));
-  };
 
   return (
     <>
@@ -111,26 +149,18 @@ export default function Feed() {
                     </div>
                 </div>
 
-              {/* Renderizar los comentarios si están activos */}
-              {activeComments[post.id] && post.comments && post.comments.length > 0 && (
-                <div className="mt-4 space-y-2">
-                  {post.comments.map((comment) => (
-                    <div key={comment.id} className="bg-gray-800 p-2 rounded-lg">
-                      <p className="text-sm text-gray-400">
-                        <span className="font-bold text-white">{comment.username}:</span> {comment.text}
-                      </p>
-                    </div>
+                {activeComments[post.id] && comments[post.id] && (
+                <div>
+                  {comments[post.id].slice(0, visibleCommentsCount[post.id]).map((comment) => (
+                    <p key={comment.id}>{comment.username}: {comment.text}</p>
                   ))}
-                  {/* Caja de texto para agregar nuevo comentario */}
-                  <div className="mt-4">
-                    <textarea
-                      className="w-full bg-gray-800 text-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Escribe un comentario..."
-                      rows={2}
-                    />
-                  </div>
+                  <textarea
+                    placeholder="Escribe un comentario..."
+                    onBlur={(e) => handleAddComment(post.id, e.target.value)}
+                  />
                 </div>
               )}
+
             </div>
           ))}
         </section>
