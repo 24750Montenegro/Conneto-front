@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 const CreatePost = () => {
   const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null); // Estado para la vista previa
   const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
   const [description, setDescription] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -63,15 +64,25 @@ const CreatePost = () => {
       return;
     }
 
-    // Previsualización de la imagen
-    const image = new Image();
-    image.src = URL.createObjectURL(file);
-    image.onload = () => {
-      const aspectRatio = image.width / image.height;
-      setImageAspectRatio(aspectRatio);
-      setSelectedImage(image.src);
-    };
+    // Establecer el archivo seleccionado
+    setSelectedImage(file);
   };
+
+  useEffect(() => {
+    // Crear una URL de vista previa si hay una imagen seleccionada
+    if (selectedImage) {
+      const imageUrl = URL.createObjectURL(selectedImage);
+      setImagePreviewUrl(imageUrl);
+
+      // Liberar la URL de la imagen cuando se desmonte el componente o se cambie la imagen
+      return () => {
+        URL.revokeObjectURL(imageUrl);
+      };
+    } else {
+      setImagePreviewUrl(null); // Resetear la URL si no hay imagen
+    }
+  }, [selectedImage]);
+
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -113,24 +124,53 @@ const CreatePost = () => {
       });
       return;
     }
-
+  
     setIsLoading(true); // Iniciar el estado de carga
-
+  
     try {
-      const formData = new FormData();
-      formData.append("description", description);
-      formData.append("categories", JSON.stringify(selectedCategories));
+      // Primero, subir la imagen a Cloudinary
+      const imageFormData = new FormData();
+      imageFormData.append("file", selectedImage);
+      imageFormData.append("upload_preset", "conneto"); // Usa tu preset aquí
+  
+      const uploadResponse = await fetch("https://api.cloudinary.com/v1_1/duryihjrl/image/upload", {
+        method: "POST",
+        body: imageFormData,
+      });
+  
+      if (!uploadResponse.ok) {
+        throw new Error("Error al subir la imagen a Cloudinary");
+      }
+  
+      const uploadData = await uploadResponse.json();
+      const imageUrl = uploadData.secure_url; // La URL de la imagen subida a Cloudinary
+      console.log(imageUrl);
+      const token = localStorage.getItem('token');
+      console.log(token)
+      if (token) {
+        // Extraer el id utilizando una expresión regular
+        const match = token.match(/"id":(\d+)/);
+        
+        // Comprobar si se encontró el id
+        if (match) {
+          const idAutor = match[1]; // El id se encuentra en el primer grupo capturado
+        
 
-      const response = await fetch(selectedImage);
-      const blob = await response.blob();
-      const file = new File([blob], `image.${blob.type.split("/")[1]}`, { type: blob.type });
-      formData.append("image", file);
+      const postData = {
+        contenido: description,
+        imagenURL: imageUrl,
+        autor: { id: idAutor }
+      };
 
+      console.log("Datos a enviar:", postData);
+
+  
       const res = await fetch("http://localhost:8080/publicaciones/crear", {
         method: "POST",
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData), // Convertir a JSON
       });
-
+  
       if (res.ok) {
         Swal.fire({
           icon: "success",
@@ -146,6 +186,8 @@ const CreatePost = () => {
           confirmButtonText: "Intentar de nuevo",
         });
       }
+
+    }}//
     } catch (error) {
       console.error("Error:", error);
       Swal.fire({
@@ -157,7 +199,10 @@ const CreatePost = () => {
     } finally {
       setIsLoading(false); // Finalizar el estado de carga
     }
-  };   
+  };
+  
+  
+
 
   return (
     <div className="min-h-screen bg-gray-900 text-white py-10 px-4 flex flex-col justify-center items-center">
@@ -186,9 +231,9 @@ const CreatePost = () => {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-          {selectedImage ? (
+          {imagePreviewUrl ? (
             <img
-              src={selectedImage}
+              src={imagePreviewUrl}
               alt="Selected"
               className="object-cover h-full w-full rounded-lg"
             />
