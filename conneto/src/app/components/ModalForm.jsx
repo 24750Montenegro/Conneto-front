@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 const ModalForm = ({ isOpen, onClose }) => {
   const [nombre, setNombre] = useState('');
@@ -13,6 +14,16 @@ const ModalForm = ({ isOpen, onClose }) => {
 
     try {
       //Hace una solicitud al servidor conn los datos del proyecto
+      if (!nombre || !descripcion || selectedOds.length === 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "Existen campos incompletos",
+          text: "Complete todos los campos de su nuevo proyecto",
+          confirmButtonText: "Intente de nuevo",
+        });
+        return;
+      }
+
       const response = await fetch('http://localhost:8080/Proyecto/crearProyecto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -24,15 +35,31 @@ const ModalForm = ({ isOpen, onClose }) => {
       });
       if (response.ok) {
         const proyecto = await response.json();
-        alert('Se ha registrado su nuevo proyecto con éxito');
+        Swal.fire({
+          icon: "success",
+          title: "Su proyecto se creó con éxito",
+          text: "Regresar al feed.",
+        });
         onClose();
       } else {
-        alert('Ocurrió un error al guardar su nuevo proyecto');
+        Swal.fire({
+          icon: "error",
+          title: "Error al crear el nuevo proyecto",
+          text: "Ocurrió un error al enviar los datos de su proyecto. Inténtalo de nuevo.",
+          confirmButtonText: "Intentar de nuevo",
+        });
       }
     } catch (error) {
-      console.error('Hubo un error al enviar su proyecto', error);
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error de red",
+        text: "Error al intentar crear su nuevo proyecto. Verifica tu conexión.",
+        confirmButtonText: "Intentar de nuevo",
+      });
     }
   };
+
 
   //Maneja la selección de ODSs del modal
   const handleCheckboxChange = (ods) => {
