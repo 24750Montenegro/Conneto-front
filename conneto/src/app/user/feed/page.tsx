@@ -1,6 +1,6 @@
 'use client'
 import Head from 'next/head';
-import { useState } from 'react'; // Importar el hook useState para el manejo de estado
+import { useState, useEffect } from 'react'; // Importar el hook useState para el manejo de estado
 import { FaHeart, FaComment, FaLink } from 'react-icons/fa';
 import { AiFillHome } from 'react-icons/ai';   // Icono para Home
 import { BsPlusCircle } from 'react-icons/bs'; // Icono para Plus con Círculo
@@ -24,6 +24,28 @@ interface CommentsState {
   [key: number]: Comment[];
 }
 
+interface Comment {
+  id: number;
+  username: string;
+  text: string;
+}
+
+interface User {
+  id: number;
+  avatar: string;
+  nombre: string;
+
+}
+
+interface Post {
+  id: number;
+  time: string;
+  contenido: string;
+  imagenURL: string; 
+  comments: Comment[];
+  autor: User;
+}
+
 export default function Feed() {
   const router = useRouter();
   const [activeComments, setActiveComments] = useState<ActiveCommentsState>({});
@@ -42,6 +64,34 @@ export default function Feed() {
     }
   };
   
+  // Estado para controlar si se muestran los comentarios de cada post
+  
+  const [posts, setPosts] = useState<Post[]>([]); // Estado para almacenar las publicaciones
+  const [loading, setLoading] = useState(true); // Estado para manejar la carga
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/publicaciones/todas'); // Cambia a tu URL real
+        if (!response.ok) {
+          throw new Error('Error al obtener las publicaciones');
+        }
+        const data = await response.json(); // Convertir la respuesta a JSON
+        setPosts(data); // Actualizar el estado con las publicaciones
+        console.log(data)
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false); // Finaliza el estado de carga
+      }
+    };
+
+    fetchPosts();
+  }, []); // El array vacío significa que este efecto se ejecuta una vez al montar el componente
+
+  if (loading) {
+    return <div>Cargando publicaciones...</div>; // Mensaje de carga
+  }
 
   const toggleComments = (postId: number) => {
     setActiveComments((prevState) => ({
@@ -68,32 +118,6 @@ export default function Feed() {
   };
   
 
-  const posts = [
-    //reemplazar los siguientes datos con llamada al api
-    {
-      id: 1,
-      username: "James",
-      time: "1 hour ago",
-      text: "Nuevo proyecto de infraestructura e innovación enfocado en el desarrollo sostenible...",
-      image: "https://media.licdn.com/dms/image/v2/C5112AQGo5l3-KAnMDA/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520179677776?e=2147483647&v=beta&t=OdR4prUuAWvXWcFKZJJwk8GbJD5vTgdW15QLMz4liiE", // reemplazar con la URL de la imagen real
-      avatar: "https://portal.bilardo.gov.tr/assets/pages/media/profile/profile_user.jpg",  // reemplazar con la URL del avatar
-      comments: [
-        {id:1, username: "Sophia", text: "¡Ingreible proyecto, felicidades!"},
-        {id:2, username: "John", text: "¿Como puedo participar?"}
-      ]
-    },
-    {
-      id: 2,
-      username: "Anna",
-      time: "2 hours ago",
-      text: "Increíble proyecto de conservación marina...",
-      image: "https://image.isu.pub/140225055437-5426fdab6f7587eb5fd4b7ccedf38aea/jpg/page_1_thumb_large.jpg", 
-      avatar: "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?b=1&s=612x612&w=0&k=20&c=hEPh7-WEAqHTHdQtPrfEN9-yYCiPGKvD32VZ5lcL6SU=",  
-      comments: [
-        {id:1, username: "Laura", text: "Que gran idiciativa, gracias por compartir."}
-      ]
-    },
-  ];
 
   return (
     <>
@@ -116,20 +140,20 @@ export default function Feed() {
               </div> 
               <img
                 className="w-full h-full object-cover rounded-xl mt-2"
-                src={post.image}
+                src={post.imagenURL}
                 alt="Post image"
               />
-              <p className="text-gray-300 mt-2">{post.text} <span className="text-blue-500 cursor-pointer">ver más</span></p>
+              <p className="text-gray-300 mt-2">{post.contenido} </p>
              
               <img
                   className="w-10 h-10 rounded-full object-cover	"
-                  src={post.avatar}
-                  alt={`${post.username}'s avatar`}
+                  src={post.autor.avatar}
+                  alt={`${post.autor.nombre}'s avatar`}
                 />
                
                 <div className="flex items-center justify-between">
                     <div className="flex-grow">
-                        <p className="text-white font-semibold">{post.username} <span className="text-blue-500">✔</span></p>
+                        <p className="text-white font-semibold">{post.autor.nombre} <span className="text-blue-500">✔</span></p>
                         <p className="text-gray-500 text-sm">{post.time}</p>
                     </div>
                     <div className="flex space-x-4 items-center">
