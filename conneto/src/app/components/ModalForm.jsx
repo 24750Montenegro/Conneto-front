@@ -23,6 +23,7 @@ const ModalForm = ({ isOpen, onClose }) => {
         }),
       });
       if (response.ok) {
+        const proyecto = await response.jason();
         alert('Se ha registrado su nuevo proyecto con éxito');
         onClose();
       } else {
