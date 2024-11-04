@@ -13,7 +13,7 @@ const ModalForm = ({ isOpen, onClose }) => {
 
     try {
       //Hace una solicitud al servidor conn los datos del proyecto
-      const response = await fetch('http://localhost:3000/proyectos', {
+      const response = await fetch('http://localhost:8080/Proyecto/crearProyecto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -23,7 +23,7 @@ const ModalForm = ({ isOpen, onClose }) => {
         }),
       });
       if (response.ok) {
-        const proyecto = await response.jason();
+        const proyecto = await response.json();
         alert('Se ha registrado su nuevo proyecto con éxito');
         onClose();
       } else {
