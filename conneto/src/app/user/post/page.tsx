@@ -131,7 +131,7 @@ const CreatePost = () => {
       // Primero, subir la imagen a Cloudinary
       const imageFormData = new FormData();
       imageFormData.append("file", selectedImage);
-      imageFormData.append("upload_preset", "conneto"); // Usa tu preset aquí
+      imageFormData.append("upload_preset", "conneto"); 
   
       const uploadResponse = await fetch("https://api.cloudinary.com/v1_1/duryihjrl/image/upload", {
         method: "POST",
