@@ -18,12 +18,16 @@ git clone
 
 
 2. Entra en el directorio del proyecto:
-`cd Conneto-front/conneto/`
+   ```bash
+   cd Conneto-front/conneto/
+   ```
 
 3. Instala las dependencias del proyecto con npm:
-`npm install`
-
+    ```bash
+    npm install
+    ```
 4. Inicia el servidor de desarrollo:
-`npm run dev`
-
+    ```bash
+      npm run dev
+    ```
 Una vez que se haya iniciado el servidor, podrás acceder a la aplicación en http://localhost:3000 desde tu navegador.
