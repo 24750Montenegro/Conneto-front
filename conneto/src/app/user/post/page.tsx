@@ -160,7 +160,7 @@ const CreatePost = () => {
         contenido: description,
         imagenURL: imageUrl,
         autor: { id: idAutor },
-        categorias: selectedCategories,
+        categorias: selectedCategories.map((cat) => ({ id: cat })),
       };
 
       console.log("Datos a enviar:", postData);
