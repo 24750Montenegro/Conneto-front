@@ -27,8 +27,8 @@ export default function Login() {
             const usuario = await response.json();
             // Crear el token con id y email
             const token = {
-              id: usuario.id,   // Asegúrate de que "id" sea un campo en el objeto Usuario
-              email: usuario.email, // Asegúrate de que "email" sea un campo en el objeto Usuario
+              id: usuario.id,  
+              email: usuario.email,
             };
 
           // Guardar el token como un string JSON en el localStorage

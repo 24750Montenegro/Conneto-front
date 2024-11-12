@@ -5,60 +5,65 @@ import { IoMdNotifications } from "react-icons/io";
 import { BsPlusCircle } from "react-icons/bs";
 import { FaUserAstronaut } from 'react-icons/fa';  
 import { useRouter } from 'next/navigation';
+import TasksTable from '../../components/TasksTable';
 
 
-const UserAlianza = () =>{
+const UserAlianza = () => {
     const router = useRouter();
 
     const alianzaData = {
         image: "https://media.licdn.com/dms/image/v2/C5112AQGo5l3-KAnMDA/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520179677776?e=2147483647&v=beta&t=OdR4prUuAWvXWcFKZJJwk8GbJD5vTgdW15QLMz4liiE",
         name: "Desarrollo Sostenible",
         text: "Nuevo proyecto de infraestructura e innovación enfocado en el desarrollo sostenible...",
-
         allies: [
             {
-              id:1,
-              name: "James",
-              avatar: "https://portal.bilardo.gov.tr/assets/pages/media/profile/profile_user.jpg",  // reemplazar con la URL del avatar
-              categories: ["Diseñador", "Ingeniero Industrial"]
+                id: 1,
+                name: "James",
+                avatar: "https://portal.bilardo.gov.tr/assets/pages/media/profile/profile_user.jpg",
+                categories: ["Diseñador", "Ingeniero Industrial"]
             },
             {
-              id:1,
-              name: "Ana",
-              avatar: "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?b=1&s=612x612&w=0&k=20&c=hEPh7-WEAqHTHdQtPrfEN9-yYCiPGKvD32VZ5lcL6SU=",  
-              categories: ["Arquitecto", "Ambientalista"]
+                id: 2,
+                name: "Ana",
+                avatar: "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?b=1&s=612x612&w=0&k=20&c=hEPh7-WEAqHTHdQtPrfEN9-yYCiPGKvD32VZ5lcL6SU=",
+                categories: ["Arquitecto", "Ambientalista"]
             },
         ],
-
-        proyects: [
+        projects: [
             {
-                id:1,
+                id: 1,
                 title: "Innovación Energética",
                 descripcion: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos reprehenderit, aperiam omnis maxime nesciunt, distinctio neque maiores in blanditiis minus error. Ratione, dolorum. Saepe laudantium eligendi ratione dolore, suscipit iusto!",
             },
             {
-                id:2,
+                id: 2,
                 title: "Conservación del Agua",
                 descripcion: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos reprehenderit, aperiam omnis maxime nesciunt, distinctio neque maiores in blanditiis minus error. Ratione, dolorum. Saepe laudantium eligendi ratione dolore, suscipit iusto!",
             },
+        ],
+        tasks: [
             {
-                id:3,
-                title: "Tecnología Verde",
-                descripcion: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos reprehenderit, aperiam omnis maxime nesciunt, distinctio neque maiores in blanditiis minus error. Ratione, dolorum. Saepe laudantium eligendi ratione dolore, suscipit iusto!",
+                name: "Diseñar interfaz",
+                assignee: "James",
+                status: "En progreso"
             },
             {
-                id:4,
-                title: "Energia Renovable",
-                descripcion: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos reprehenderit, aperiam omnis maxime nesciunt, distinctio neque maiores in blanditiis minus error. Ratione, dolorum. Saepe laudantium eligendi ratione dolore, suscipit iusto!",
+                name: "Implementar backend",
+                assignee: "Ana",
+                status: "En progreso"
+            },
+            {
+                name: "Pruebas de funcionalidad",
+                assignee: "James",
+                status: "Completado"
             }
-        ],
-    }
+        ]
+    };
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-900 text-white">
             <div className="flex-grow">
                 <div className="flex flex-col items-center py-10 px-4">
-
                     {/* Parte superior con la imagen, nombre y texto */}
                     <div className="relative w-full h-96">
                         <img
@@ -72,17 +77,15 @@ const UserAlianza = () =>{
                         </div>
                     </div>
 
-                    {/* Publicaciones del usuario */}
+                    {/* Aliados */}
                     <div className="max-w-4xl w-full bg-gray-800 rounded-lg p-6 shadow-lg mt-10">
-                        <h2 className="text-2xl text-green-400 font-semibold mb-6 text-center">
-                            Aliados
-                        </h2>
+                        <h2 className="text-2xl text-green-400 font-semibold mb-6 text-center">Aliados</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {alianzaData.allies.map((allie) => (
                                 <div key={allie.id} className="bg-gray-700 p-4 rounded-lg">
                                     <img
                                         src={allie.avatar}
-                                        alt={`Post ${allie.id}`}
+                                        alt={allie.name}
                                         className="w-full h-48 object-cover rounded-lg mb-4"
                                     />
                                     <p className="text-lg font-medium mb-2">{allie.name}</p>
@@ -101,12 +104,11 @@ const UserAlianza = () =>{
                         </div>
                     </div>
 
-
-                    {/* Sección de proyectos */}
+                    {/* Proyectos */}
                     <div className="flex-grow mt-10 px-4">
                         <h2 className="text-3xl font-bold text-center text-green-400 mb-8">Proyectos</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {alianzaData.proyects.map((project) => (
+                            {alianzaData.projects.map((project) => (
                                 <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg">
                                     <h3 className="text-xl font-semibold text-white mb-3">{project.title}</h3>
                                     <p className="text-gray-400">{project.descripcion}</p>
@@ -115,47 +117,23 @@ const UserAlianza = () =>{
                         </div>
                     </div>
 
-
+                    {/* Tareas */}
+                    <div className="flex-grow mt-10 px-4">
+                        <h2 className="text-3xl font-bold text-center text-green-400 mb-8">Tareas</h2>
+                        <TasksTable tasks={alianzaData.tasks} />
+                    </div>
                 </div>
             </div>
 
-            
-
+            {/* Navegación */}
             <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
-                <button className="group relative" onClick={() => router.push('/user/feed')}>
-                    <AiFillHome
-                        className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
-                        size={24}
-                    />
-                </button>
-
-                <button className="group relative" onClick={() => router.push('/user/post')}>
-                    <BsPlusCircle
-                        className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
-                        size={24}
-                    />
-                </button>
-
-                <button className="group relative" onClick={() => router.push('/user/alianza')}>
-                    <IoMdNotifications
-                        className="text-blue-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
-                        size={24}
-                    />
-                </button>
-
-                <button className="group relative" onClick={() => router.push('/user/profile')}>
-                    <FaUserAstronaut
-                        className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
-                        size={24}
-                    />
-                </button>
-
+                <button onClick={() => router.push('/user/feed')}><AiFillHome size={24} /></button>
+                <button onClick={() => router.push('/user/post')}><BsPlusCircle size={24} /></button>
+                <button onClick={() => router.push('/user/alianza')}><IoMdNotifications size={24} /></button>
+                <button onClick={() => router.push('/user/profile')}><FaUserAstronaut size={24} /></button>
             </nav>
         </div>
     );
-
-
-    
-}
+};
 
 export default UserAlianza;
