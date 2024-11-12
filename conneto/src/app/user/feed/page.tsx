@@ -8,6 +8,7 @@ import { FaUserAstronaut } from 'react-icons/fa';
 import { IoMdNotifications } from 'react-icons/io'; // Icono para Notificaciones
 import  AlliesSection  from '../../components/AlliesSection'
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 
 // Interfaces
@@ -174,34 +175,45 @@ export default function Feed() {
               </div>
 
               {activeComments[post.id] && comments[post.id] && (
-                <div className="mt-4 space-y-4">
-                  {comments[post.id].map((comment) => (
-                    <div key={comment.id} className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow-sm">
-                      <img
-                        src={comment.avatar || "/default-avatar.jpg"}
-                        alt={`${comment.username}'s avatar`}
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="text-sm font-semibold text-white">{comment.username}</p>
-                        <p className="text-gray-400 text-sm">{comment.text}</p>
-                      </div>
-                    </div>
-                  ))}
-                  <textarea
-                    className="w-full p-2 mt-2 text-gray-300 bg-gray-800 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
-                    placeholder="Escribe un comentario..."
-                    value={newCommentText[post.id] || ''}
-                    onChange={(e) => setNewCommentText((prev) => ({ ...prev, [post.id]: e.target.value }))}
-                  />
-                  <button
-                    onClick={() => handleAddComment(post.id)}
-                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
-                  >
-                    Guardar comentario
-                  </button>
+    <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="mt-4 space-y-4"
+    >
+        {comments[post.id].map((comment) => (
+            <motion.div
+                key={comment.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: 0.1 * comment.id }}
+                className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out"
+            >
+                <img 
+                    src={comment.avatar || "/default-avatar.jpg"} 
+                    alt={`${comment.username}'s avatar`} 
+                    className="w-10 h-10 rounded-full object-cover" 
+                />
+                <div>
+                    <p className="text-sm font-semibold text-white">{comment.username}</p>
+                    <p className="text-gray-400 text-sm">{comment.text}</p>
                 </div>
-              )}
+            </motion.div>
+        ))}
+        <textarea
+            className="w-full p-2 mt-2 text-gray-300 bg-gray-800 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
+            placeholder="Escribe un comentario..."
+            value={newCommentText[post.id] || ''}
+            onChange={(e) => setNewCommentText((prev) => ({ ...prev, [post.id]: e.target.value }))}
+        />
+        <button
+            onClick={() => handleAddComment(post.id)}
+            className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
+        >
+            Guardar comentario
+        </button>
+    </motion.div>
+)}
 
             </div>
           ))}
