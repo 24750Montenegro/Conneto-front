@@ -34,6 +34,7 @@ interface Post {
   imagenURL: string; // Asegúrate de que esto coincide con la propiedad de tu API
   comments: Comment[];
   autor: User;
+  categorias: string[];
 }
 
 export default function Feed() {
@@ -93,69 +94,76 @@ export default function Feed() {
 
 
         <section className="mt-6 space-y-6 grid items-center justify-center mb-8">
-          {posts.map((post) => (
-            <div key={post.id} className="bg-gray-900 bg-zinc-900 p-4 rounded-3xl shadow-lg max-w-xl w-full">
-              <div className="flex items-center space-x-4">
-               
-              </div> 
-              <img
-                className="w-full h-full object-cover rounded-xl mt-2"
-                src={post.imagenURL}
-                alt="Post image"
-              />
-              <p className="text-gray-300 mt-2">{post.contenido} </p>
-             
-              <img
-                  className="w-10 h-10 rounded-full object-cover	"
-                  src={post.autor.avatar}
-                  alt={`${post.autor.nombre}'s avatar`}
-                />
-               
-                <div className="flex items-center justify-between">
-                    <div className="flex-grow">
-                        <p className="text-white font-semibold">{post.autor.nombre} <span className="text-blue-500">✔</span></p>
-                        <p className="text-gray-500 text-sm">{post.time}</p>
-                    </div>
-                    <div className="flex space-x-4 items-center">
-                      <button className='group relative active'>
-                        <FaHeart  className="text-gray-500 group-hover:text-pink-500 group-active:text-pink-700 transition duration-300 ease-in-out"
-                        size={24} />
-                      </button>
-                    <button className='group relative' onClick={() => toggleComments(post.id)}>
-                      <FaComment className="text-gray-500 group-hover:text-green-400 group-active:text-emerald-700 transition duration-300 ease-in-out"
-                      size={24} />
-                    </button>
-                    <button className='group relative'>
-                      <FaLink  className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
-                      size={24} />
-                    </button>
-                    
-                    </div>
-                </div>
+        {posts.map((post) => (
+          <div key={post.id} className="bg-gray-900 bg-zinc-900 p-4 rounded-3xl shadow-lg max-w-xl w-full">
+            <div className="flex items-center space-x-4">
+            </div> 
+            <img
+              className="w-full h-full object-cover rounded-xl mt-2"
+              src={post.imagenURL}
+              alt="Post image"
+            />
+            <p className="text-gray-300 mt-2">{post.contenido} </p>
 
-              {/* Renderizar los comentarios si están activos */}
-              {activeComments[post.id] && post.comments && post.comments.length > 0 && (
-                <div className="mt-4 space-y-2">
-                  {post.comments.map((comment) => (
-                    <div key={comment.id} className="bg-gray-800 p-2 rounded-lg">
-                      <p className="text-sm text-gray-400">
-                        <span className="font-bold text-white">{comment.username}:</span> {comment.text}
-                      </p>
-                    </div>
-                  ))}
-                  {/* Caja de texto para agregar nuevo comentario */}
-                  <div className="mt-4">
-                    <textarea
-                      className="w-full bg-gray-800 text-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Escribe un comentario..."
-                      rows={2}
-                    />
-                  </div>
-                </div>
-              )}
+            {/* Mostrar etiquetas de categorías */}
+            {post.categorias && post.categorias.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {post.categorias.map((categoria, index) => (
+                  <span
+                    key={index}
+                    className="px-2 py-1 bg-green-600 text-white text-xs rounded-lg"
+                  >
+                    {categoria}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <img
+              className="w-10 h-10 rounded-full object-cover"
+              src={post.autor.avatar}
+              alt={`${post.autor.nombre}'s avatar`}
+            />
+            <div className="flex items-center justify-between">
+              <div className="flex-grow">
+                <p className="text-white font-semibold">{post.autor.nombre} <span className="text-blue-500">✔</span></p>
+                <p className="text-gray-500 text-sm">{post.time}</p>
+              </div>
+              <div className="flex space-x-4 items-center">
+                <button className='group relative active'>
+                  <FaHeart  className="text-gray-500 group-hover:text-pink-500 group-active:text-pink-700 transition duration-300 ease-in-out" size={24} />
+                </button>
+                <button className='group relative' onClick={() => toggleComments(post.id)}>
+                  <FaComment className="text-gray-500 group-hover:text-green-400 group-active:text-emerald-700 transition duration-300 ease-in-out" size={24} />
+                </button>
+                <button className='group relative'>
+                  <FaLink  className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out" size={24} />
+                </button>
+              </div>
             </div>
-          ))}
-        </section>
+
+            {/* Renderizar los comentarios si están activos */}
+            {activeComments[post.id] && post.comments && post.comments.length > 0 && (
+              <div className="mt-4 space-y-2">
+                {post.comments.map((comment) => (
+                  <div key={comment.id} className="bg-gray-800 p-2 rounded-lg">
+                    <p className="text-sm text-gray-400">
+                      <span className="font-bold text-white">{comment.username}:</span> {comment.text}
+                    </p>
+                  </div>
+                ))}
+                <div className="mt-4">
+                  <textarea
+                    className="w-full bg-gray-800 text-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Escribe un comentario..."
+                    rows={2}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </section>
 
         <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
         <button className="group relative">

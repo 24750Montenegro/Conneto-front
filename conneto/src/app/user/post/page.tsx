@@ -159,7 +159,8 @@ const CreatePost = () => {
       const postData = {
         contenido: description,
         imagenURL: imageUrl,
-        autor: { id: idAutor }
+        autor: { id: idAutor },
+        categorias: selectedCategories,
       };
 
       console.log("Datos a enviar:", postData);
