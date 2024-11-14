@@ -234,7 +234,7 @@ export default function Feed() {
             />
           </button>
 
-          <button className="group relative" onClick={() =>   router.push('/user/alianza')}>
+          <button className="group relative" onClick={() =>   router.push('/user/eleccionalianza')}>
             <IoMdNotifications
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
               size={24}

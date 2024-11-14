@@ -144,7 +144,7 @@ const UserProfile = () => {
         <button className="group relative" onClick={() => router.push('/user/post')}>
           <BsPlusCircle className="text-gray-500 group-hover:text-blue-500 transition duration-300" size={24} />
         </button>
-        <button className="group relative" onClick={() => router.push('/user/alianza')}>
+        <button className="group relative" onClick={() => router.push('/user/eleccionalianza')}>
           <IoMdNotifications className="text-gray-500 group-hover:text-blue-500 transition duration-300" size={24} />
         </button>
         <button className="group relative" onClick={() => router.push('/user/profile')}>
