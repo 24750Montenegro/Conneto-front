@@ -1,7 +1,7 @@
 'use client';
-import { AiFillHome } from "react-icons/ai";
 import { IoMdNotifications } from "react-icons/io";
 import { BsPlusCircle } from "react-icons/bs";
+import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
 import AlliesSection from '../../components/AlliesSection';
 import { FaUserAstronaut } from 'react-icons/fa';  
 import { useRouter } from 'next/navigation';
@@ -145,7 +145,7 @@ const UserProfile = () => {
           <BsPlusCircle className="text-gray-500 group-hover:text-blue-500 transition duration-300" size={24} />
         </button>
         <button className="group relative" onClick={() => router.push('/user/eleccionalianza')}>
-          <IoMdNotifications className="text-gray-500 group-hover:text-blue-500 transition duration-300" size={24} />
+          <AiOutlineTeam className="text-gray-500 group-hover:text-blue-500 transition duration-300" size={24} />
         </button>
         <button className="group relative" onClick={() => router.push('/user/profile')}>
           <FaUserAstronaut className="text-blue-500 transition duration-300" size={24} />

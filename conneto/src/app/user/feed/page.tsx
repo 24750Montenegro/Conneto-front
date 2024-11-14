@@ -2,10 +2,9 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react'; // Importar el hook useState para el manejo de estado
 import { FaHeart, FaComment, FaLink } from 'react-icons/fa';
-import { AiFillHome } from 'react-icons/ai';   // Icono para Home
 import { BsPlusCircle } from 'react-icons/bs'; // Icono para Plus con Círculo
 import { FaUserAstronaut } from 'react-icons/fa';   
-import { IoMdNotifications } from 'react-icons/io'; // Icono para Notificaciones
+import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
 import  AlliesSection  from '../../components/AlliesSection'
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -220,28 +219,27 @@ export default function Feed() {
         </section>
 
         <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
-        <button className="group relative">
+          <button className="group relative">
             <AiFillHome
               className="text-blue-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
               size={24}
             />
           </button>
 
-          <button className="group relative" onClick={() =>   router.push('/user/post')}>
+          <button className="group relative" onClick={() => router.push('/user/post')}>
             <BsPlusCircle
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
               size={24}
             />
           </button>
 
-          <button className="group relative" onClick={() =>   router.push('/user/eleccionalianza')}>
-            <IoMdNotifications
+          <button className="group relative" onClick={() => router.push('/user/eleccionalianza')}>
+            <AiOutlineTeam
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
-              size={24}
-            />
+              size={24} /> {/* Usa el icono de apretón de manos */}
           </button>
 
-          <button className="group relative" onClick={() =>   router.push('/user/profile')}>
+          <button className="group relative" onClick={() => router.push('/user/profile')}>
             <FaUserAstronaut
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
               size={24}

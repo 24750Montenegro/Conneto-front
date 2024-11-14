@@ -1,7 +1,7 @@
 "use client";
 
-import { AiFillHome } from "react-icons/ai";
 import { IoMdNotifications } from "react-icons/io";
+import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
 import { BsPlusCircle } from "react-icons/bs";
 import { FaUserAstronaut, FaPlus, FaMinus } from 'react-icons/fa';  // Iconos de + y -
 import { useRouter, useParams } from 'next/navigation';
@@ -151,10 +151,33 @@ const MostrarAlianza = () => {
 
             {/* Navegación */}
             <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
-                <button onClick={() => router.push('/user/feed')}><AiFillHome size={24} /></button>
-                <button onClick={() => router.push('/user/post')}><BsPlusCircle size={24} /></button>
-                <button onClick={() => router.push('/user/eleccionalianza')}><IoMdNotifications size={24} /></button>
-                <button onClick={() => router.push('/user/profile')}><FaUserAstronaut size={24} /></button>
+                <button className="group relative" onClick={() => router.push('/user/feed')}>
+                    <AiFillHome
+                        className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
+                        size={24}
+                    />
+                </button>
+
+                <button className="group relative" onClick={() => router.push('/user/post')}>
+                    <BsPlusCircle
+                        className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
+                        size={24}
+                    />
+                </button>
+
+                <button className="group relative" onClick={() => router.push('/user/eleccionalianza')}>
+                    <AiOutlineTeam
+                        className="text-blue-500 transition duration-300"
+                        size={24} /> {/* Usa el icono de apretón de manos */}
+                </button>
+
+                <button className="group relative" onClick={() => router.push('/user/profile')}>
+                    <FaUserAstronaut
+                        className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
+                        size={24}
+                    />
+                </button>
+
             </nav>
         </div>
     );
