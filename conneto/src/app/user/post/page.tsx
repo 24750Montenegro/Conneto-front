@@ -9,7 +9,7 @@ const CreatePost = () => {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null); // Estado para la vista previa
-  const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
+  const [imageAspectRatio] = useState<number | null>(null);
   const [description, setDescription] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [dragActive, setDragActive] = useState(false);

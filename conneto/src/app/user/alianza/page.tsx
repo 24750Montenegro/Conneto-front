@@ -5,9 +5,9 @@ import { IoMdNotifications } from "react-icons/io";
 import { BsPlusCircle } from "react-icons/bs";
 import { FaUserAstronaut } from 'react-icons/fa';  
 import { useRouter } from 'next/navigation';
-import TasksTable from '../../components/TasksTable';
+//import TasksTable from '../../components/TasksTable';
 import { useEffect, useState } from 'react';
-import Swal from 'sweetalert2';
+//import Swal from 'sweetalert2';
 
 const UserAlianza = () => {
     const router = useRouter();

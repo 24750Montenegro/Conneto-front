@@ -1,6 +1,5 @@
 "use client";
 
-import { IoMdNotifications } from "react-icons/io";
 import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
 import { BsPlusCircle } from "react-icons/bs";
 import { FaUserAstronaut, FaPlus, FaMinus } from 'react-icons/fa';  // Iconos de + y -

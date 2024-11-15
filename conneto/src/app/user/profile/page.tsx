@@ -1,5 +1,4 @@
 'use client';
-import { IoMdNotifications } from "react-icons/io";
 import { BsPlusCircle } from "react-icons/bs";
 import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
 import AlliesSection from '../../components/AlliesSection';
