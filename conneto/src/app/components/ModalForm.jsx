@@ -8,12 +8,9 @@ const ModalForm = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  //Maneja el envio del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      //Hace una solicitud al servidor conn los datos del proyecto
       if (!nombre || !descripcion || selectedOds.length === 0) {
         Swal.fire({
           icon: "warning",
@@ -27,18 +24,14 @@ const ModalForm = ({ isOpen, onClose }) => {
       const response = await fetch('http://localhost:8080/Proyecto/crearProyecto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nombre, //Envia el nombre del proyecto
-          descripcion, //Envia la descripcion del proyecto
-          ods: selectedOds, //Envia los ods seleccionados
-        }),
+        body: JSON.stringify({ nombre, descripcion, ods: selectedOds }),
       });
+
       if (response.ok) {
-        const proyecto = await response.json();
         Swal.fire({
           icon: "success",
           title: "Su proyecto se creó con éxito",
-          text: "Regresar al feed.",
+          text: "Regresar al feed, puedes ver tu proyecto en la pestaña de alianzas",
         });
         onClose();
       } else {
@@ -60,13 +53,9 @@ const ModalForm = ({ isOpen, onClose }) => {
     }
   };
 
-
-  //Maneja la selección de ODSs del modal
   const handleCheckboxChange = (ods) => {
-    //Actualiza el estado selected ods, agregando o quitando la ODS seleccionada
-    setSelectedOds(prev => 
-      prev.includes(ods) ? prev.filter(o => o !== ods) : //Quita el ODS si ya esta seleccionada
-       [...prev, ods] //Agrega ODS si no esta seleccionada
+    setSelectedOds(prev =>
+      prev.includes(ods) ? prev.filter(o => o !== ods) : [...prev, ods]
     );
   };
 
@@ -93,10 +82,10 @@ const ModalForm = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="bg-slate-900 p-6 rounded-lg w-96">
-        <h2 className="text-xl font-semibold mb-4 text-green-600">Crea tu nuevo proyecto</h2>
+        <h2 className="text-xl font-semibold mb-4 text-green-500">Crea tu nuevo proyecto</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-white-600 text-sm font-semibold mb-2">
+            <label className="block text-gray-300 text-sm font-semibold mb-2">
               Nombre del proyecto
             </label>
             <input
@@ -104,40 +93,42 @@ const ModalForm = ({ isOpen, onClose }) => {
               id="nombre"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              className="w-full p-1 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full p-2 bg-gray-800 text-gray-200 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-white-600 text-sm font-semibold mb-2">
+            <label className="block text-gray-300 text-sm font-semibold mb-2">
               Descripción del proyecto
             </label>
             <textarea
               id="descripcion"
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
-              className="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full p-3 bg-gray-800 text-gray-200 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
-          <label className="block text-white-600 text-sm font-semibold mb-2">
+          <label className="block text-gray-300 text-sm font-semibold mb-2">
             ODS que trabaja el proyecto
           </label>
-          {categories.map((cat, index) => (
-            <div key={index} className="text-white flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id={`category-${index}`}
-                onChange={() => handleCheckboxChange(cat)}
-                className="h-5 w-5 text-green-500 bg-green-700 border-green-600 rounded"
-              />
-              <label htmlFor={`category-${index}`} className="text-sm">
-                {cat}
-              </label>
-            </div>
-          ))}
+          <div className="max-h-48 overflow-y-auto mb-4">
+            {categories.map((cat, index) => (
+              <div key={index} className="flex items-center space-x-2 mb-2">
+                <input
+                  type="checkbox"
+                  id={`category-${index}`}
+                  onChange={() => handleCheckboxChange(cat)}
+                  className="h-5 w-5 text-green-500 bg-gray-800 border-gray-600 rounded focus:ring-0"
+                />
+                <label htmlFor={`category-${index}`} className="text-sm text-gray-300">
+                  {cat}
+                </label>
+              </div>
+            ))}
+          </div>
           <div className="flex justify-end mt-4">
             <button
               type="button"
-              className="bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-800"
+              className="bg-gray-700 text-gray-200 py-2 px-4 rounded hover:bg-gray-800"
               onClick={onClose}
             >
               Cerrar

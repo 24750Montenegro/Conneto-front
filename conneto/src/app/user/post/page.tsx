@@ -9,7 +9,7 @@ const CreatePost = () => {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null); // Estado para la vista previa
-  const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
+  const [imageAspectRatio] = useState<number | null>(null);
   const [description, setDescription] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [dragActive, setDragActive] = useState(false);
@@ -131,7 +131,7 @@ const CreatePost = () => {
       // Primero, subir la imagen a Cloudinary
       const imageFormData = new FormData();
       imageFormData.append("file", selectedImage);
-      imageFormData.append("upload_preset", "conneto"); // Usa tu preset aquí
+      imageFormData.append("upload_preset", "conneto"); 
   
       const uploadResponse = await fetch("https://api.cloudinary.com/v1_1/duryihjrl/image/upload", {
         method: "POST",
