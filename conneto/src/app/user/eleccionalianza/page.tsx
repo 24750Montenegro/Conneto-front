@@ -15,11 +15,17 @@ interface AlianzaData {
     image: string;
 }
 
+interface ProyectoData {
+    id: number;
+    nombre: string;
+    descripcion: string;
+}
+
 const ListaAlianzas = () => {
     const router = useRouter();
     const [alianzas, setAlianzas] = useState<AlianzaData[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [proyectos, setProyectos] = useState<any[]>([]);
+    const [proyectos, setProyectos] = useState<ProyectoData[]>([]);
 
 
     useEffect(() => {
