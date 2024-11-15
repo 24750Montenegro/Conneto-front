@@ -110,11 +110,11 @@ const UserAlianza = () => {
                         </div>
                     </div>
 
-                    {/* Tareas */}
+                    {/* Tareas
                     <div className="flex-grow mt-10 px-4">
                         <h2 className="text-3xl font-bold text-center text-green-400 mb-8">Tareas</h2>
                         <TasksTable tasks={alianzaData.tasks} />
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
