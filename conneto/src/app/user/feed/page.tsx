@@ -45,6 +45,7 @@ interface Post {
   comments: Comment[];
   autor: User;
   likes: LikeUser[];
+  categorias: { id: string; nombre: string }[];
 }
 
 export default function Feed() {
@@ -108,7 +109,7 @@ export default function Feed() {
         headers: {
           'Content-Type': 'application/json',
         }
-       });
+      });
   
       if (!response.ok) {
         throw new Error('Error al dar/retirar like');
@@ -131,8 +132,6 @@ export default function Feed() {
       console.error('Error:', error);
     }
   };
-  
- 
 
   if (loading) {
     return <div>Cargando publicaciones...</div>;
@@ -236,14 +235,30 @@ export default function Feed() {
                   </button>
                 </div>
               </div>
+      
+    {/* Mostrar las etiquetas de categorías */}
+    <div className="mt-4 flex flex-wrap gap-2">
+      {post.categorias && post.categorias.length > 0 ? (
+        post.categorias.map((categoria) => (
+          <span
+            key={categoria.id}
+            className="bg-green-700 text-white text-sm px-2 py-1 rounded-full"
+          >
+            {categoria.nombre}
+          </span>
+        ))
+      ) : (
+        <span className="text-gray-500 text-sm">Sin categorías</span>
+      )}
+    </div>
 
-              {activeComments[post.id] && comments[post.id] && (
-    <motion.div
+    {activeComments[post.id] && comments[post.id] && (
+      <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
         className="mt-4 space-y-4"
-    >
+      >
         {comments[post.id].map((comment) => (
             <motion.div
                 key={comment.id}
