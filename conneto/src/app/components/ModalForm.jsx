@@ -13,7 +13,6 @@ const ModalForm = ({ isOpen, onClose }) => {
     e.preventDefault();
 
     try {
-      //Hace una solicitud al servidor conn los datos del proyecto
       if (!nombre || !descripcion || selectedOds.length === 0) {
         Swal.fire({
           icon: "warning",
@@ -154,5 +153,4 @@ const ModalForm = ({ isOpen, onClose }) => {
     </div>
   );
 };
-
 export default ModalForm;
