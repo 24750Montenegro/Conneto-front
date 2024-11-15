@@ -6,10 +6,12 @@ import { BsPlusCircle } from "react-icons/bs";
 import { FaUserAstronaut } from 'react-icons/fa';  
 import { useRouter } from 'next/navigation';
 import TasksTable from '../../components/TasksTable';
-
+import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 const UserAlianza = () => {
     const router = useRouter();
+    const [proyectos, setProyectos] = useState<any[]>([]);
 
     const alianzaData = {
         image: "https://media.licdn.com/dms/image/v2/C5112AQGo5l3-KAnMDA/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520179677776?e=2147483647&v=beta&t=OdR4prUuAWvXWcFKZJJwk8GbJD5vTgdW15QLMz4liiE",
@@ -17,10 +19,10 @@ const UserAlianza = () => {
         text: "Nuevo proyecto de infraestructura e innovación enfocado en el desarrollo sostenible...",
         allies: [
             {
-                id: 1,
-                name: "James",
-                avatar: "https://portal.bilardo.gov.tr/assets/pages/media/profile/profile_user.jpg",
-                categories: ["Diseñador", "Ingeniero Industrial"]
+              id:1,
+              name: "James",
+              avatar: "https://portal.bilardo.gov.tr/assets/pages/media/profile/profile_user.jpg",
+              categories: ["Diseñador", "Ingeniero Industrial"]
             },
             {
                 id: 2,
@@ -29,38 +31,29 @@ const UserAlianza = () => {
                 categories: ["Arquitecto", "Ambientalista"]
             },
         ],
-        projects: [
-            {
-                id: 1,
-                title: "Innovación Energética",
-                descripcion: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos reprehenderit, aperiam omnis maxime nesciunt, distinctio neque maiores in blanditiis minus error. Ratione, dolorum. Saepe laudantium eligendi ratione dolore, suscipit iusto!",
-            },
-            {
-                id: 2,
-                title: "Conservación del Agua",
-                descripcion: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos reprehenderit, aperiam omnis maxime nesciunt, distinctio neque maiores in blanditiis minus error. Ratione, dolorum. Saepe laudantium eligendi ratione dolore, suscipit iusto!",
-            },
-        ],
-        tasks: [
-            {
-                name: "Diseñar interfaz",
-                assignee: "James",
-                status: "En progreso"
-            },
-            {
-                name: "Implementar backend",
-                assignee: "Ana",
-                status: "En progreso"
-            },
-            {
-                name: "Pruebas de funcionalidad",
-                assignee: "James",
-                status: "Completado"
+
+
+    }
+
+    useEffect(() => {
+        const fetchProyectos = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/Proyecto/obtenerProyectos');
+                if (response.ok) {
+                    const proyectosData = await response.json();
+                    setProyectos(proyectosData);
+                } else {
+                    console.error("Error al obtener los proyectos");
+                }
+            } catch (error) {
+                console.error("Error de red al cargar los proyectos:", error);
             }
-        ]
-    };
+        };
+        fetchProyectos();
+    }, []);
 
     return (
+        
         <div className="min-h-screen flex flex-col bg-gray-900 text-white">
             <div className="flex-grow">
                 <div className="flex flex-col items-center py-10 px-4">
@@ -108,10 +101,10 @@ const UserAlianza = () => {
                     <div className="flex-grow mt-10 px-4">
                         <h2 className="text-3xl font-bold text-center text-green-400 mb-8">Proyectos</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {alianzaData.projects.map((project) => (
+                            {proyectos.map((project) => (
                                 <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                                    <h3 className="text-xl font-semibold text-white mb-3">{project.title}</h3>
-                                    <p className="text-gray-400">{project.descripcion}</p>
+                                    <h3 className="text-xl font-semibold text-white mb-3">{project.nombre}</h3>
+                                    <p className="text-gray-400 break-words">{project.descripcion}</p>
                                 </div>
                             ))}
                         </div>
@@ -125,7 +118,6 @@ const UserAlianza = () => {
                 </div>
             </div>
 
-            {/* Navegación */}
             <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
                 <button onClick={() => router.push('/user/feed')}><AiFillHome size={24} /></button>
                 <button onClick={() => router.push('/user/post')}><BsPlusCircle size={24} /></button>
@@ -133,7 +125,6 @@ const UserAlianza = () => {
                 <button onClick={() => router.push('/user/profile')}><FaUserAstronaut size={24} /></button>
             </nav>
         </div>
-    );
-};
-
+    );   
+}
 export default UserAlianza;
