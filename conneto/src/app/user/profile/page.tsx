@@ -104,8 +104,6 @@ const UserProfile = () => {
             </div>
           </div>
 
-          <AlliesSection allies={userData.allies || []} />
-
           <div className="max-w-4xl w-full bg-gray-800 rounded-lg p-6 shadow-lg mt-10">
             <h2 className="text-2xl text-green-400 font-semibold mb-6 text-center">
               Mis publicaciones

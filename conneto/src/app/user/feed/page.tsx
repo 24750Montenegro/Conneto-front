@@ -206,8 +206,6 @@ export default function Feed() {
           </h1>
         </header>
 
-        <AlliesSection allies={posts} />
-
         <section className="mt-6 space-y-6 grid items-center justify-center mb-8">
           {posts.map((post) => (
             <div key={post.id} className="bg-gray-900 bg-zinc-900 p-4 rounded-3xl shadow-lg max-w-xl w-full">
