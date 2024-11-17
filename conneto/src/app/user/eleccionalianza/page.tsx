@@ -1,13 +1,13 @@
 "use client";
 
 
-import { BsPlusCircle } from "react-icons/bs";
-import { FaUserAstronaut } from 'react-icons/fa';
-import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
-
+import { BsPlusCircle } from "react-icons/bs";// Iconos de navegación
+import { FaUserAstronaut } from 'react-icons/fa';// Iconos de navegación
+import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Iconos de navegación
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
+// Interfaces
 interface AlianzaData {
     id: number;
     name: string;
@@ -21,17 +21,19 @@ interface ProyectoData {
     descripcion: string;
 }
 
+//Obtener la lista de alianzas
 const ListaAlianzas = () => {
     const router = useRouter();
     const [alianzas, setAlianzas] = useState<AlianzaData[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [proyectos, setProyectos] = useState<ProyectoData[]>([]);
 
-
+    //Almacena las alianzas
     useEffect(() => {
         obtenerAlianzas();
     }, []);
 
+    //Obtener la lista de alianzas
     const obtenerAlianzas = async () => {
         try {
             const response = await fetch("http://localhost:8080/alianza");
@@ -48,10 +50,12 @@ const ListaAlianzas = () => {
         }
     };
 
+    //Redirecciona a newAlianza(para crear una alianza)
     const manejarCrearAlianza = () => {
         router.push('/user/newAlianza');
     };
 
+    //Redirecciona a la alianza elegida
     const verDetallesAlianza = (id: number) => {
         router.push(`/user/alianza/${id}`);
     };
@@ -60,6 +64,7 @@ const ListaAlianzas = () => {
         <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-4">
             <h2 className="text-3xl font-semibold text-green-400 mb-6">Lista de Alianzas</h2>
 
+            {/* Boton que redirecciona a newAlianza para crear alianza*/}
             <button
                 onClick={manejarCrearAlianza}
                 className="bg-green-500 text-white px-6 py-2 rounded-md mb-6"
@@ -78,7 +83,9 @@ const ListaAlianzas = () => {
                             onClick={() => verDetallesAlianza(alianza.id)}
                             className="bg-gray-800 p-4 rounded-lg cursor-pointer hover:bg-gray-700 transition duration-200"
                         >
+                            {/* Titula de la Alianza */}
                             <h2 className="text-xl font-semibold">{alianza.name}</h2>
+                            {/* Descripcion de la alianza */}
                             <p className="text-gray-400">{alianza.descripcion}</p>
                         </div>
                     ))
@@ -90,6 +97,8 @@ const ListaAlianzas = () => {
 
             {/* Navegación */}
             <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
+
+                {/*feed*/}
                 <button className="group relative" onClick={() => router.push('/user/feed')}>
                     <AiFillHome
                         className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
@@ -97,6 +106,7 @@ const ListaAlianzas = () => {
                     />
                 </button>
 
+                {/*post(crear publicacion)*/}
                 <button className="group relative" onClick={() => router.push('/user/post')}>
                     <BsPlusCircle
                         className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
@@ -104,12 +114,14 @@ const ListaAlianzas = () => {
                     />
                 </button>
 
+                {/*eleccion alianza*/}
                 <button className="group relative" onClick={() => router.push('/user/eleccionalianza')}>
                     <AiOutlineTeam
                         className="text-blue-500 transition duration-300"
                         size={24} /> {/* Usa el icono de apretón de manos */}
                 </button>
 
+                {/*profile*/}
                 <button className="group relative" onClick={() => router.push('/user/profile')}>
                     <FaUserAstronaut
                         className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"

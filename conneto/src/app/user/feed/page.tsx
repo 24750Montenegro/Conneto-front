@@ -57,6 +57,7 @@ export default function Feed() {
   const [loading, setLoading] = useState(true); // Estado para manejar la carga
   const [usuarioId, setUsuarioId] = useState<number | null>(null);
 
+  //Obtener los comentarios 
   const fetchComments = async (postId: number) => {
     try {
       const response = await axios.get(`http://localhost:8080/comentarios/${postId}?cantidad=3`);
@@ -148,7 +149,7 @@ export default function Feed() {
     }));
   };
 
-
+  //Crear un comentario
   const handleAddComment = async (postId: number) => {
     const text = newCommentText[postId]?.trim();
     if (!text) return; // Evita enviar comentarios vacíos
@@ -218,7 +219,11 @@ export default function Feed() {
                   <p className="text-white font-semibold">{post.autor.nombre} <span className="text-blue-500">✔</span></p>
                   <p className="text-gray-500 text-sm">{post.time}</p>
                 </div>
+
+                {/* Comentarios y Likes*/}
                 <div className="flex space-x-4 items-center">
+
+                  {/*Likes*/}
                   <button onClick={() => toggleLike(post.id)} className="group relative active flex items-center">
                     <FaHeart
                       className={`text-gray-500 group-hover:text-pink-500 ${usuarioId && post.likes.some((user) => user.id === usuarioId) ? 'text-pink-500' : ''} transition duration-300 ease-in-out`}
@@ -226,6 +231,8 @@ export default function Feed() {
                     />
                     <span className="ml-2 text-gray-400">{post.likes.length}</span>
                   </button>
+
+                  {/* Comentarios*/}
                   <button className='group relative' onClick={() => toggleComments(post.id)}>
                     <FaComment className="text-gray-500 group-hover:text-green-400 group-active:text-emerald-700 transition duration-300 ease-in-out" size={24} />
                   </button>
@@ -233,8 +240,10 @@ export default function Feed() {
                     <FaLink className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out" size={24} />
                   </button>
                 </div>
-              </div>
 
+              </div>
+              
+              {/* Datos comentarios*/}
               {activeComments[post.id] && comments[post.id] && (
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
@@ -243,6 +252,8 @@ export default function Feed() {
                   className="mt-4 space-y-4"
                 >
                   {comments[post.id].map((comment) => (
+
+                    //Id comentario
                     <motion.div
                       key={comment.id}
                       initial={{ opacity: 0, y: 10 }}
@@ -250,23 +261,29 @@ export default function Feed() {
                       transition={{ duration: 0.2, delay: 0.1 * comment.id }}
                       className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out"
                     >
+                      {/*Avatar del usuario que escribio el comentario*/}
                       <img
                         src={comment.avatar || "/default-avatar.jpg"}
                         alt={`${comment.username}'s avatar`}
                         className="w-10 h-10 rounded-full object-cover"
                       />
                       <div>
+                        {/*Nombre usuario que escribio el comentario*/}
                         <p className="text-sm font-semibold text-white">{comment.username}</p>
+                        {/*Contenido del comentario*/}
                         <p className="text-gray-400 text-sm">{comment.text}</p>
                       </div>
                     </motion.div>
                   ))}
+
+                  {/*Textbox para escribir el comentario*/}
                   <textarea
                     className="w-full p-2 mt-2 text-gray-300 bg-gray-800 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
                     placeholder="Escribe un comentario..."
                     value={newCommentText[post.id] || ''}
                     onChange={(e) => setNewCommentText((prev) => ({ ...prev, [post.id]: e.target.value }))}
                   />
+                  {/*Boton para guardar comentario*/}
                   <button
                     onClick={() => handleAddComment(post.id)}
                     className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
@@ -280,11 +297,14 @@ export default function Feed() {
           ))}
         </section>
 
+        {/* Navegación */}
         <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
+          {/* feed */}
           <button className="group relative">
             <AiFillHome className="text-blue-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out" size={24} />
           </button>
 
+          {/* Post (crear publicacion*/}
           <button className="group relative" onClick={() => router.push('/user/post')}>
             <BsPlusCircle
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
@@ -292,12 +312,14 @@ export default function Feed() {
             />
           </button>
 
+          {/* eleccionalianza*/}
           <button className="group relative" onClick={() => router.push('/user/eleccionalianza')}>
             <AiOutlineTeam
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
               size={24} /> 
           </button>
 
+          {/* profile*/}
           <button className="group relative" onClick={() => router.push('/user/profile')}>
             <FaUserAstronaut
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
