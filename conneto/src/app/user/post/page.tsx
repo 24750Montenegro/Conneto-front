@@ -202,9 +202,6 @@ const CreatePost = () => {
       setIsLoading(false); // Finalizar el estado de carga
     }
   };
-  
-  
-
 
   return (
     <div className="min-h-screen bg-gray-900 text-white py-10 px-4 flex flex-col justify-center items-center">
@@ -282,7 +279,7 @@ const CreatePost = () => {
                 value={cat.id}
                 checked={selectedCategories.includes(String(cat.id))}
                 onChange={() => handleCategoryChange(cat.id)}
-                className="h-5 w-5 text-green-500 bg-gray-700 border-gray-600 rounded"
+                className="h-5 w-5 rounded-full appearance-none bg-gray-800 border border-gray-600 checked:bg-green-500 checked:border-green-500 checked:focus:ring-0 checked:ring-green-600"
               />
               <label htmlFor={`category-${cat.id}`} className="text-sm">
                 {cat.name}
