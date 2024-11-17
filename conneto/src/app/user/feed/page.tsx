@@ -3,9 +3,9 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { FaHeart, FaComment, FaLink } from 'react-icons/fa';
 import { BsPlusCircle } from 'react-icons/bs'; // Icono para Plus con Círculo
-import { FaUserAstronaut } from 'react-icons/fa';   
+import { FaUserAstronaut } from 'react-icons/fa';
 import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
-import  AlliesSection  from '../../components/AlliesSection'
+import AlliesSection from '../../components/AlliesSection'
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import axios from 'axios';
@@ -98,41 +98,41 @@ export default function Feed() {
       console.error('No se pudo obtener el ID del usuario desde el token.');
       return;
     }
-  
+
     // Verificamos si el usuario ya dio like
     const userAlreadyLiked = posts.find((post) => post.id === postId)?.likes.some((user) => user.id === usuarioId);
-  
+
     try {
       const response = await fetch(`http://localhost:8080/publicaciones/${postId}/like/${usuarioId}`, {
         method: userAlreadyLiked ? 'DELETE' : 'POST',  // Usamos DELETE si ya dio like, POST si no ha dado like
         headers: {
           'Content-Type': 'application/json',
         }
-       });
-  
+      });
+
       if (!response.ok) {
         throw new Error('Error al dar/retirar like');
       }
-  
+
       const updatedPosts = posts.map((post) => {
         if (post.id === postId) {
           // Actualizamos los likes según el estado actual
           const updatedLikes = userAlreadyLiked
             ? post.likes.filter((user) => user.id !== usuarioId) // Eliminar like
             : [...post.likes, { id: usuarioId, nombre: 'TuNombre', email: 'TuEmail' }]; // Agregar like
-  
+
           return { ...post, likes: updatedLikes };
         }
         return post;
       });
-  
+
       setPosts(updatedPosts);
     } catch (error) {
       console.error('Error:', error);
     }
   };
-  
- 
+
+
 
   if (loading) {
     return <div>Cargando publicaciones...</div>;
@@ -147,7 +147,7 @@ export default function Feed() {
       [postId]: !prevState[postId],
     }));
   };
-  
+
 
   const handleAddComment = async (postId: number) => {
     const text = newCommentText[postId]?.trim();
@@ -158,38 +158,38 @@ export default function Feed() {
     let idAutor;
 
     if (token) {
-        // Extrae el id del token usando una expresión regular
-        const match = token.match(/"id":(\d+)/);
-        
-        // Si encuentra el id, lo guarda en idAutor
-        if (match) {
-            idAutor = match[1]; // Captura el id del primer grupo
-        }
+      // Extrae el id del token usando una expresión regular
+      const match = token.match(/"id":(\d+)/);
+
+      // Si encuentra el id, lo guarda en idAutor
+      if (match) {
+        idAutor = match[1]; // Captura el id del primer grupo
+      }
     }
 
     // Si no se encontró un id, no envía el comentario
     if (!idAutor) {
-        console.error("No se pudo obtener el id del autor");
-        return;
+      console.error("No se pudo obtener el id del autor");
+      return;
     }
 
     try {
-        // Envío de la solicitud para guardar el comentario
-        await axios.post("http://localhost:8080/comentarios/guardarComentario", {
-            publicacion: { id: postId },
-            autor: { id: idAutor }, // Usa el id extraído del token
-            contenido: text
-        });
+      // Envío de la solicitud para guardar el comentario
+      await axios.post("http://localhost:8080/comentarios/guardarComentario", {
+        publicacion: { id: postId },
+        autor: { id: idAutor }, // Usa el id extraído del token
+        contenido: text
+      });
 
-        // Limpia el campo de texto después de enviar el comentario
-        setNewCommentText((prev) => ({ ...prev, [postId]: '' }));
-        fetchComments(postId); // Actualiza los comentarios después de agregar uno nuevo
+      // Limpia el campo de texto después de enviar el comentario
+      setNewCommentText((prev) => ({ ...prev, [postId]: '' }));
+      fetchComments(postId); // Actualiza los comentarios después de agregar uno nuevo
     } catch (error) {
-        console.error("Error al agregar comentario:", error);
+      console.error("Error al agregar comentario:", error);
     }
   };
 
-  
+
 
 
   return (
@@ -205,8 +205,6 @@ export default function Feed() {
             </span>
           </h1>
         </header>
-
-        <AlliesSection allies={posts} />
 
         <section className="mt-6 space-y-6 grid items-center justify-center mb-8">
           {posts.map((post) => (
@@ -238,52 +236,52 @@ export default function Feed() {
               </div>
 
               {activeComments[post.id] && comments[post.id] && (
-    <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mt-4 space-y-4"
-    >
-        {comments[post.id].map((comment) => (
-            <motion.div
-                key={comment.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, delay: 0.1 * comment.id }}
-                className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out"
-            >
-                <img 
-                    src={comment.avatar || "/default-avatar.jpg"} 
-                    alt={`${comment.username}'s avatar`} 
-                    className="w-10 h-10 rounded-full object-cover" 
-                />
-                <div>
-                    <p className="text-sm font-semibold text-white">{comment.username}</p>
-                    <p className="text-gray-400 text-sm">{comment.text}</p>
-                </div>
-            </motion.div>
-        ))}
-        <textarea
-            className="w-full p-2 mt-2 text-gray-300 bg-gray-800 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
-            placeholder="Escribe un comentario..."
-            value={newCommentText[post.id] || ''}
-            onChange={(e) => setNewCommentText((prev) => ({ ...prev, [post.id]: e.target.value }))}
-        />
-        <button
-            onClick={() => handleAddComment(post.id)}
-            className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
-        >
-            Guardar comentario
-        </button>
-    </motion.div>
-)}
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="mt-4 space-y-4"
+                >
+                  {comments[post.id].map((comment) => (
+                    <motion.div
+                      key={comment.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2, delay: 0.1 * comment.id }}
+                      className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out"
+                    >
+                      <img
+                        src={comment.avatar || "/default-avatar.jpg"}
+                        alt={`${comment.username}'s avatar`}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                      <div>
+                        <p className="text-sm font-semibold text-white">{comment.username}</p>
+                        <p className="text-gray-400 text-sm">{comment.text}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                  <textarea
+                    className="w-full p-2 mt-2 text-gray-300 bg-gray-800 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
+                    placeholder="Escribe un comentario..."
+                    value={newCommentText[post.id] || ''}
+                    onChange={(e) => setNewCommentText((prev) => ({ ...prev, [post.id]: e.target.value }))}
+                  />
+                  <button
+                    onClick={() => handleAddComment(post.id)}
+                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
+                  >
+                    Guardar comentario
+                  </button>
+                </motion.div>
+              )}
 
             </div>
           ))}
         </section>
 
         <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
-            <button className="group relative">
+          <button className="group relative">
             <AiFillHome className="text-blue-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out" size={24} />
           </button>
 
@@ -297,7 +295,7 @@ export default function Feed() {
           <button className="group relative" onClick={() => router.push('/user/eleccionalianza')}>
             <AiOutlineTeam
               className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
-              size={24} /> {/* Usa el icono de apretón de manos */}
+              size={24} /> 
           </button>
 
           <button className="group relative" onClick={() => router.push('/user/profile')}>
