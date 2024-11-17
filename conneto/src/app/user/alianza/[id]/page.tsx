@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import Swal from 'sweetalert2';
 import { AiFillHome, AiOutlineTeam } from "react-icons/ai"; // Iconos de navegación
 import { BsPlusCircle } from "react-icons/bs";// Iconos de navegación
@@ -10,7 +10,7 @@ import ModalForm from "../../../components/ModalForm"; // Importamos el modal
 // Interfaces
 interface Usuario {
     id: number;
-    name: string;
+    nombre: string;
     avatar: string;
 }
 
@@ -135,6 +135,10 @@ const MostrarAlianza = () => {
         }
     };
 
+
+    const verDetallesProyecto = (id: number, nombre: string) => {
+        router.push(`/user/proyecto/${nombre}/${id}`);
+    };
     //Muestra Cargando... mientras se cargan los datos de alianza
     if (!alianzaData) {
         return <p>{error || "Cargando..."}</p>;
@@ -170,11 +174,11 @@ const MostrarAlianza = () => {
                                     {/*avatar del usuario*/}
                                     <img
                                         src={allie.avatar}
-                                        alt={allie.name}
+                                        alt={allie.nombre}
                                         className="w-full h-48 object-cover rounded-lg mb-4"
                                     />
                                     {/*Nombre del usuario*/}
-                                    <p className="text-lg font-medium mb-2">{allie.name}</p>
+                                    <p className="text-lg font-medium mb-2">{allie.nombre}</p>
                                 </div>
                             ))}
                         </div>
@@ -201,8 +205,7 @@ const MostrarAlianza = () => {
                         </button>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {alianzaData.proyectos.map((project: Proyecto) => (
-                                <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                                    {/*Titulo del proyecto*/}
+                                <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-600" onClick={() => verDetallesProyecto(project.id, project.nombre)}>
                                     <h3 className="text-xl font-semibold text-white mb-3">{project.nombre}</h3>
                                     {/*Descripcion del proyecto*/}
                                     <p className="text-gray-400">{project.descripcion}</p>
