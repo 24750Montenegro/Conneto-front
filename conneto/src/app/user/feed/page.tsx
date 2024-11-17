@@ -1,7 +1,9 @@
 'use client'
 import Head from 'next/head';
+import Swal from 'sweetalert2'; // Importar SweetAlert2
+import 'sweetalert2/dist/sweetalert2.min.css';
 import { useState, useEffect } from 'react';
-import { FaHeart, FaComment, FaLink } from 'react-icons/fa';
+import { FaHeart, FaComment, FaLink, FaTrash } from 'react-icons/fa';
 import { BsPlusCircle } from 'react-icons/bs'; // Icono para Plus con Círculo
 import { FaUserAstronaut } from 'react-icons/fa';   
 import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
@@ -188,8 +190,37 @@ export default function Feed() {
     }
   };
 
+  const deletePost = async (postId: number) => {
+    // Mostrar alerta de confirmación
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás deshacer esta acción.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
   
-
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`http://localhost:8080/publicaciones/eliminar/${postId}`, {
+          method: 'DELETE',
+        });
+  
+        if (response.ok) {
+          setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+          Swal.fire('¡Eliminada!', 'La publicación ha sido eliminada.', 'success');
+        } else {
+          throw new Error('No se pudo eliminar la publicación');
+        }
+      } catch (error) {
+        console.error('Error al eliminar publicación:', error);
+        Swal.fire('Error', 'Ocurrió un problema al eliminar la publicación.', 'error');
+      }
+    }
+  };
 
   return (
     <>
@@ -236,14 +267,17 @@ export default function Feed() {
                 </div>
               </div>
       
+    {usuarioId === post.autor.id && ( // Mostrar el botón solo si es el autor
+      <button onClick={() => deletePost(post.id)} className="text-red-500 hover:text-red-700">
+        <FaTrash size={20} />
+      </button>
+    )}
+
     {/* Mostrar las etiquetas de categorías */}
     <div className="mt-4 flex flex-wrap gap-2">
       {post.categorias && post.categorias.length > 0 ? (
         post.categorias.map((categoria) => (
-          <span
-            key={categoria.id}
-            className="bg-green-700 text-white text-sm px-2 py-1 rounded-full"
-          >
+          <span key={categoria.id} className="bg-green-700 text-white text-sm px-2 py-1 rounded-full">
             {categoria.nombre}
           </span>
         ))
