@@ -56,23 +56,6 @@ const ListaAlianzas = () => {
         router.push(`/user/alianza/${id}`);
     };
 
-    useEffect(() => {
-        const fetchProyectos = async () => {
-            try {
-                const response = await fetch('http://localhost:8080/Proyecto/obtenerProyectos');
-                if (response.ok) {
-                    const proyectosData = await response.json();
-                    setProyectos(proyectosData);
-                } else {
-                    console.error("Error al obtener los proyectos");
-                }
-            } catch (error) {
-                console.error("Error de red al cargar los proyectos:", error);
-            }
-        };
-        fetchProyectos();
-    }, []);
-
     return (
         <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-4">
             <h2 className="text-3xl font-semibold text-green-400 mb-6">Lista de Alianzas</h2>
@@ -104,18 +87,6 @@ const ListaAlianzas = () => {
                 )}
             </div>
 
-                                {/* Proyectos */}
-                <div className="flex-grow mt-10 px-4">
-                        <h2 className="text-3xl font-bold text-center text-green-400 mb-8">Proyectos</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {proyectos.map((project) => (
-                                <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                                    <h3 className="text-xl font-semibold text-white mb-3">{project.nombre}</h3>
-                                    <p className="text-gray-400 break-words">{project.descripcion}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
 
             {/* Navegación */}
             <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
