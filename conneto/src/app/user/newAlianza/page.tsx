@@ -14,6 +14,7 @@ const CrearAlianza = () => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
+    //Crear una alianza
     const manejarGuardarAlianza = async () => {
         setError(null);
         setSuccess(null);
@@ -21,6 +22,7 @@ const CrearAlianza = () => {
         const token = localStorage.getItem('token');
         let Usuario_id;
 
+        //Guarda el id del usuario para guardarlo como aliado
         if (token) {
             const match = token.match(/"id":(\d+)/);
             if (match) {
@@ -38,6 +40,7 @@ const CrearAlianza = () => {
             return;
         }
 
+        //Almacena la imagen del proyecto en cloudinary, para acceder a ella por medio de una url
         try {
             const imageFormData = new FormData();
             imageFormData.append("file", selectedImage);
@@ -55,6 +58,7 @@ const CrearAlianza = () => {
             const uploadData = await uploadResponse.json();
             const imageUrl = uploadData.secure_url;
 
+            //crea la nueva alianza
             const nuevaAlianza = { 
                 name, 
                 image: imageUrl, 
@@ -113,7 +117,8 @@ const CrearAlianza = () => {
 
     return (
         <div className="min-h-screen bg-gray-900 flex flex-col items-center p-4 relative">
-            {/* Botón de regreso en la esquina superior izquierda */}
+
+            {/* Botón de regreso a eleccionalianza*/}
             <button
                 onClick={() => router.push('/user/eleccionalianza')}
                 className="absolute top-6 left-6 bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-md flex items-center gap-2"
@@ -127,8 +132,8 @@ const CrearAlianza = () => {
             {error && <p className="text-red-500 mb-4">{error}</p>}
             {success && <p className="text-green-500 mb-4">{success}</p>}
 
-            {/* Contenedor centrado */}
             <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-lg">
+                {/* Área de escribir nombre de la alianza*/}
                 <input
                     type="text"
                     placeholder="Nombre de la Alianza"
@@ -137,7 +142,7 @@ const CrearAlianza = () => {
                     className="bg-gray-700 text-white p-3 rounded-md mb-4 w-full border border-gray-600 focus:outline-none focus:border-green-400"
                 />
 
-                {/* Área de subir imagen con estilo unificado */}
+                {/* Área de subir imagen*/}
                 <div
                     className={`mb-6 border-2 border-dashed rounded-lg flex justify-center items-center ${
                         dragActive ? "border-green-500 bg-gray-700" : "border-gray-600"
@@ -173,7 +178,8 @@ const CrearAlianza = () => {
                         </div>
                     )}
                 </div>
-
+                
+                {/* Área de escribir descripcion de la alianza*/}
                 <textarea
                     placeholder="Descripción"
                     value={descripcion}
@@ -181,6 +187,7 @@ const CrearAlianza = () => {
                     className="bg-gray-700 text-white p-3 rounded-md mb-4 w-full border border-gray-600 focus:outline-none focus:border-green-400"
                 ></textarea>
 
+                {/*Boton para guardar la alianza*/}
                 <button
                     onClick={manejarGuardarAlianza}
                     className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-md w-full transition-colors duration-200"
