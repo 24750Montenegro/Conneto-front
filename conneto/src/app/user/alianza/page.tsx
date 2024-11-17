@@ -5,7 +5,7 @@ import { IoMdNotifications } from "react-icons/io";
 import { BsPlusCircle } from "react-icons/bs";
 import { FaUserAstronaut } from 'react-icons/fa';  
 import { useRouter } from 'next/navigation';
-//import TasksTable from '../../components/TasksTable';
+import TasksTable from '../../components/TasksTable';
 import { useEffect, useState } from 'react';
 //import Swal from 'sweetalert2';
 
@@ -105,6 +105,7 @@ const UserAlianza = () => {
                                 <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg">
                                     <h3 className="text-xl font-semibold text-white mb-3">{project.nombre}</h3>
                                     <p className="text-gray-400 break-words">{project.descripcion}</p>
+                                    <TasksTable tasks={project.tasks} />
                                 </div>
                             ))}
                         </div>
