@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import Swal from 'sweetalert2';
 import { AiFillHome, AiOutlineTeam } from "react-icons/ai"; // Iconos de navegación
 import { BsPlusCircle } from "react-icons/bs";
@@ -9,7 +9,7 @@ import ModalForm from "../../../components/ModalForm"; // Importamos el modal
 
 interface Usuario {
     id: number;
-    name: string;
+    nombre: string;
     avatar: string;
 }
 
@@ -123,6 +123,10 @@ const MostrarAlianza = () => {
     };
 
 
+    const verDetallesProyecto = (id: number) => {
+        router.push(`/user/proyecto/${id}`);
+    };
+
 
     if (!alianzaData) {
         return <p>{error || "Cargando..."}</p>;
@@ -153,10 +157,10 @@ const MostrarAlianza = () => {
                                 <div key={allie.id} className="bg-gray-700 p-4 rounded-lg">
                                     <img
                                         src={allie.avatar}
-                                        alt={allie.name}
+                                        alt={allie.nombre}
                                         className="w-full h-48 object-cover rounded-lg mb-4"
                                     />
-                                    <p className="text-lg font-medium mb-2">{allie.name}</p>
+                                    <p className="text-lg font-medium mb-2">{allie.nombre}</p>
                                 </div>
                             ))}
                         </div>
@@ -183,8 +187,7 @@ const MostrarAlianza = () => {
                         </button>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {alianzaData.proyectos.map((project: Proyecto) => (
-                                <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                                    {/* Asegúrate de que estás usando el campo correcto para el título */}
+                                <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-600" onClick={() => verDetallesProyecto(project.id)}>
                                     <h3 className="text-xl font-semibold text-white mb-3">{project.nombre}</h3>
                                     <p className="text-gray-400">{project.descripcion}</p>
                                 </div>
