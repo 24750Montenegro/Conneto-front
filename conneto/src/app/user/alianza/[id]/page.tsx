@@ -123,8 +123,8 @@ const MostrarAlianza = () => {
     };
 
 
-    const verDetallesProyecto = (id: number) => {
-        router.push(`/user/proyecto/${id}`);
+    const verDetallesProyecto = (id: number, nombre: string) => {
+        router.push(`/user/proyecto/${nombre}/${id}`);
     };
 
 
@@ -187,7 +187,7 @@ const MostrarAlianza = () => {
                         </button>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {alianzaData.proyectos.map((project: Proyecto) => (
-                                <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-600" onClick={() => verDetallesProyecto(project.id)}>
+                                <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg hover:bg-gray-600" onClick={() => verDetallesProyecto(project.id, project.nombre)}>
                                     <h3 className="text-xl font-semibold text-white mb-3">{project.nombre}</h3>
                                     <p className="text-gray-400">{project.descripcion}</p>
                                 </div>

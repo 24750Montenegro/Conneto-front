@@ -16,7 +16,6 @@ export function TasksTable({ tasks, onDeleteTask, onToggleComplete }) {
             <th className="py-2 px-4 border-b border-gray-600 text-left">Nombre</th>
             <th className="py-2 px-4 border-b border-gray-600 text-left">Descripción</th>
             <th className="py-2 px-4 border-b border-gray-600 text-left">Asignado a</th>
-            <th className="py-2 px-4 border-b border-gray-600 text-right">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -32,20 +31,7 @@ export function TasksTable({ tasks, onDeleteTask, onToggleComplete }) {
               </td>
               <td className="py-2 px-4 border-b border-gray-600">{task.nombre}</td>
               <td className="py-2 px-4 border-b border-gray-600">{task.descripcion}</td>
-              <td className="py-2 px-4 border-b border-gray-600">{task.asignadoa}</td>
-              <td className="py-2 px-4 border-b border-gray-600 text-right">
-                <button
-                  onClick={() => onDeleteTask(task.id)}
-                  className="text-red-500 hover:text-red-700 text-left"
-                >
-
-                  <FaTrash
-                        className="text-#dc2626 group-hover:text-#7f1d1d group-active:text-blue-700 transition duration-300 ease-in-out"
-                        size={24}
-                    />
-
-                </button>
-              </td>
+              <td className="py-2 px-4 border-b border-gray-600">{task.asignado.nombre}</td>
             </tr>
           ))}
         </tbody>
