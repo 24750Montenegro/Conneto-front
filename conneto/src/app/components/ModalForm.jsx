@@ -53,6 +53,9 @@ const ModalForm = ({ isOpen, onClose, onSubmit }) => {
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               className="w-full p-2 bg-gray-800 text-gray-200 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+              style= {{
+                position: "relative",
+              }}
             />
           </div>
           <div className="mb-4">
@@ -72,7 +75,7 @@ const ModalForm = ({ isOpen, onClose, onSubmit }) => {
                   type="checkbox"
                   id={`category-${index}`}
                   onChange={() => handleCheckboxChange(cat)}
-                  className="h-5 w-5 text-green-500 bg-gray-800 border-gray-600 rounded focus:ring-0"
+                  className="h-5 w-5 rounded-full appearance-none bg-gray-800 border border-gray-600 checked:bg-green-500 checked:border-green-500 checked:focus:ring-0 checked:ring-green-600"
                 />
                 <label htmlFor={`category-${index}`} className="text-sm text-gray-300">{cat}</label>
               </div>
@@ -98,5 +101,4 @@ const ModalForm = ({ isOpen, onClose, onSubmit }) => {
     </div>
   );
 };
-
 export default ModalForm;
