@@ -1,12 +1,13 @@
 "use client";
 import Swal from 'sweetalert2';
 import { AiFillHome, AiOutlineTeam } from "react-icons/ai"; // Iconos de navegación
-import { BsPlusCircle } from "react-icons/bs";
+import { BsPlusCircle } from "react-icons/bs";// Iconos de navegación
 import { FaUserAstronaut, FaPlus, FaMinus } from "react-icons/fa"; // Iconos + y -
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ModalForm from "../../../components/ModalForm"; // Importamos el modal
 
+// Interfaces
 interface Usuario {
     id: number;
     name: string;
@@ -27,6 +28,10 @@ interface Alianza {
     proyectos: Proyecto[];
 }
 
+/**
+ * 
+ * Obtener la alianza
+ */
 const MostrarAlianza = () => {
     const router = useRouter();
     const { id } = useParams();
@@ -36,6 +41,10 @@ const MostrarAlianza = () => {
     const [usuarioId, setUsuarioId] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Estado para el modal
 
+    /**
+     * 
+     * Buscar la alianza espesifica
+     */
     const fetchAlianzaData = async () => {
         try {
             const response = await fetch(`http://localhost:8080/alianza/${id}`);
@@ -62,10 +71,13 @@ const MostrarAlianza = () => {
         }
     };
 
+    //Almacena los datos de la alianza
     useEffect(() => {
         fetchAlianzaData();
     }, [id]);
 
+
+    //handle para unirse o salirse de una alianza
     const handleJoinOrLeave = async () => {
         if (!usuarioId) return;
         const url = `http://localhost:8080/alianza/${id}/${isMember ? "salir" : "unirse"}/${usuarioId}`;
@@ -85,6 +97,7 @@ const MostrarAlianza = () => {
         }
     };
 
+    //handle para crear un proyecto ligado a la alianza
     const handleCrearProyecto = async (nuevoProyecto: { nombre: string; descripcion: string; ods: string[] }) => {
         try {
             const response = await fetch(`http://localhost:8080/Proyecto/${id}/crearProyecto`, {
@@ -122,8 +135,7 @@ const MostrarAlianza = () => {
         }
     };
 
-
-
+    //Muestra Cargando... mientras se cargan los datos de alianza
     if (!alianzaData) {
         return <p>{error || "Cargando..."}</p>;
     }
@@ -132,15 +144,19 @@ const MostrarAlianza = () => {
         <div className="min-h-screen flex flex-col bg-gray-900 text-white">
             <div className="flex-grow">
                 <div className="flex flex-col items-center py-10 px-4">
+
                     {/* Información de la alianza */}
                     <div className="relative w-full h-96">
+                        {/*Imagen de la alianza*/}
                         <img
                             src={alianzaData.image}
                             alt="Imagen del proyecto"
                             className="w-full h-full object-cover rounded-b-lg"
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-center items-center">
+                            {/*Titulo de la alianza*/}
                             <h1 className="text-4xl font-bold text-green-400 mb-2">{alianzaData.name}</h1>
+                            {/*Descripcion de la alianza*/}
                             <p className="max-w-2xl text-center text-gray-300">{alianzaData.descripcion}</p>
                         </div>
                     </div>
@@ -151,11 +167,13 @@ const MostrarAlianza = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {alianzaData.usuarios.map((allie: Usuario) => (
                                 <div key={allie.id} className="bg-gray-700 p-4 rounded-lg">
+                                    {/*avatar del usuario*/}
                                     <img
                                         src={allie.avatar}
                                         alt={allie.name}
                                         className="w-full h-48 object-cover rounded-lg mb-4"
                                     />
+                                    {/*Nombre del usuario*/}
                                     <p className="text-lg font-medium mb-2">{allie.name}</p>
                                 </div>
                             ))}
@@ -184,8 +202,9 @@ const MostrarAlianza = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {alianzaData.proyectos.map((project: Proyecto) => (
                                 <div key={project.id} className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                                    {/* Asegúrate de que estás usando el campo correcto para el título */}
+                                    {/*Titulo del proyecto*/}
                                     <h3 className="text-xl font-semibold text-white mb-3">{project.nombre}</h3>
+                                    {/*Descripcion del proyecto*/}
                                     <p className="text-gray-400">{project.descripcion}</p>
                                 </div>
                             ))}
@@ -196,16 +215,18 @@ const MostrarAlianza = () => {
             </div>
 
             {/* Modal */}
+            {/*Form para crear proyecto*/}
             <ModalForm
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                onSubmit={handleCrearProyecto} // Pasar la función como prop
+                onSubmit={handleCrearProyecto} 
             />
 
 
 
             {/* Navegación */}
             <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
+                {/*feed*/}
                 <button className="group relative" onClick={() => router.push("/user/feed")}>
                     <AiFillHome
                         className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
@@ -213,6 +234,7 @@ const MostrarAlianza = () => {
                     />
                 </button>
 
+                {/*post(crear publicacion)*/}
                 <button className="group relative" onClick={() => router.push("/user/post")}>
                     <BsPlusCircle
                         className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
@@ -220,6 +242,7 @@ const MostrarAlianza = () => {
                     />
                 </button>
 
+                {/*eleccion alianza*/}
                 <button className="group relative" onClick={() => router.push("/user/eleccionalianza")}>
                     <AiOutlineTeam
                         className="text-blue-500 transition duration-300"
@@ -227,6 +250,7 @@ const MostrarAlianza = () => {
                     />
                 </button>
 
+                {/*profile*/}
                 <button className="group relative" onClick={() => router.push("/user/profile")}>
                     <FaUserAstronaut
                         className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out"
