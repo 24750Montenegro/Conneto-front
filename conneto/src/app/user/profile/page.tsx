@@ -1,3 +1,4 @@
+// pages/user/profile.tsx
 'use client';
 import { BsPlusCircle } from "react-icons/bs";
 import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
@@ -134,6 +135,7 @@ const UserProfile = () => {
         </div>
       </div>
 
+      {/* Barra de navegación */}
       <nav className="fixed bottom-0 w-full bg-neutral-900 py-2 flex justify-around items-center">
         <button className="group relative" onClick={() => router.push('/user/feed')}>
           <AiFillHome className="text-gray-500 group-hover:text-blue-500 transition duration-300" size={24} />
@@ -150,6 +152,6 @@ const UserProfile = () => {
       </nav>
     </div>
   );
-};
+}
 
 export default UserProfile;
