@@ -1,12 +1,12 @@
 'use client'
-
-//Se importa react de React
+//Se importan recursos necesarios
 import React from 'react'
+import { FaTrash } from 'react-icons/fa';
 
 //Se exporta la funcion de TasksTable
-export function TasksTable({ tasks, onToggleComplete }) {
+export function TasksTable({ tasks, onDeleteTask, onToggleComplete }) {
   if (!tasks || tasks.length === 0) {
-    //Se retorna que no existen tareas si no existen tareas
+    //Se devuelve que no hay tareas si no existen tareas
     return <p className="text-center text-gray-500 my-4">No hay tareas disponibles.</p>
   }
 
