@@ -107,11 +107,11 @@ const CreatePost = () => {
     setDragActive(false);
   };
 
-  const handleCategoryChange = (id: number) => {
-    if (selectedCategories.includes(String(id))) {
-      setSelectedCategories(selectedCategories.filter((catId) => catId !== String(id)));
+  const handleCategoryChange = (category: string) => {
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories(selectedCategories.filter((cat) => cat !== category));
     } else {
-      setSelectedCategories([...selectedCategories, String(id)]);
+      setSelectedCategories([...selectedCategories, category]);
     }
   };
 
@@ -161,7 +161,7 @@ const CreatePost = () => {
         contenido: description,
         imagenURL: imageUrl,
         autor: { id: idAutor },
-        categorias: selectedCategories.map((id) => ({ id })) // Mapeo de IDs para categorías
+        categorias: selectedCategories // Mapeo para categorías
       };
 
       console.log("Datos a enviar:", postData);
@@ -277,8 +277,8 @@ const CreatePost = () => {
                 type="checkbox"
                 id={`category-${cat.id}`}
                 value={cat.id}
-                checked={selectedCategories.includes(String(cat.id))}
-                onChange={() => handleCategoryChange(cat.id)}
+                checked={selectedCategories.includes(String(cat.name))}
+                onChange={() => handleCategoryChange(cat.name)}
                 className="h-5 w-5 rounded-full appearance-none bg-gray-800 border border-gray-600 checked:bg-green-500 checked:border-green-500 checked:focus:ring-0 checked:ring-green-600"
               />
               <label htmlFor={`category-${cat.id}`} className="text-sm">

@@ -13,7 +13,7 @@ interface Publicaciones {
   id: number;
   contenido: string;
   imagenURL: string;
-  categories: string[]; 
+  categorias: string[];
   autor: UserData;
 }
 
@@ -118,16 +118,18 @@ const UserProfile = () => {
                     className="w-full h-48 object-cover rounded-lg mb-4"
                   />
                   <p className="text-lg font-medium mb-2">{post.contenido}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {/* {post.categories.map((category, index) => (
-                      <span
-                        key={index}
-                        className="bg-green-500 text-gray-900 px-3 py-1 rounded-full text-sm font-semibold"
-                      >
-                        {category}
-                      </span>
-                    ))} */}
-                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                      {post.categorias && post.categorias.length > 0 ? (
+                        post.categorias.map((categoria, index) => (
+                          <span key={index} className="bg-green-700 text-white text-sm px-2 py-1 rounded-full">
+                            {categoria}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-gray-500 text-sm">Sin categorías</span>
+                      )}
+                    </div>
+
                 </div>
               ))}
             </div>

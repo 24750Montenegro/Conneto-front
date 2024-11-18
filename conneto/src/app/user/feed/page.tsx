@@ -47,7 +47,7 @@ interface Post {
   comments: Comment[];
   autor: User;
   likes: LikeUser[];
-  categorias: { id: string; nombre: string }[];
+  categorias: string[];
 }
 
 export default function Feed() {
@@ -285,16 +285,17 @@ export default function Feed() {
 
     {/* Mostrar las etiquetas de categorías */}
     <div className="mt-4 flex flex-wrap gap-2">
-      {post.categorias && post.categorias.length > 0 ? (
-        post.categorias.map((categoria) => (
-          <span key={categoria.id} className="bg-green-700 text-white text-sm px-2 py-1 rounded-full">
-            {categoria.nombre}
-          </span>
-        ))
-      ) : (
-        <span className="text-gray-500 text-sm">Sin categorías</span>
-      )}
-    </div>
+    {post.categorias && post.categorias.length > 0 ? (
+      post.categorias.map((categoria, index) => (
+        <span key={index} className="bg-green-700 text-white text-sm px-2 py-1 rounded-full">
+          {categoria}
+        </span>
+      ))
+    ) : (
+      <span className="text-gray-500 text-sm">Sin categorías</span>
+    )}
+  </div>
+
 
     {activeComments[post.id] && comments[post.id] && (
       <motion.div

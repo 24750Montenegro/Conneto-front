@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,26 +16,46 @@ interface User {
   ubicacion: string
 }
 
-export default function ProfileUpdateForm({ user }: { user?: User }) {
+export default function ProfileUpdateForm() {
   const router = useRouter();
   const [hovering, setHovering] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<File | null>(null);
+  const [userData, setUserData] = useState<User | null>(null); // Estado para los datos del usuario
 
-  const defaultUser: User = {
-    nombre: '',
-    avatar: '/placeholder.svg?height=100&width=100',
-    email: '',
-    contrasena: '',
-    ubicacion: ''
-  };
+  // Estados individuales para los campos
+  const [nombre, setNombre] = useState('');
+  const [email, setEmail] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [ubicacion, setUbicacion] = useState('');
+  const [avatar, setAvatar] = useState('/placeholder.svg?height=100&width=100');
 
-  const currentUser = user || defaultUser;
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const match = token.match(/"id":(\d+)/);
+      const userId = match ? match[1] : null;
 
-  // Usamos useState para cada campo
-  const [nombre, setNombre] = useState(currentUser.nombre);
-  const [email, setEmail] = useState(currentUser.email);
-  const [contrasena, setContrasena] = useState(currentUser.contrasena);
-  const [ubicacion, setUbicacion] = useState(currentUser.ubicacion);
+      if (userId) {
+        fetch(`http://localhost:8080/usuario/${userId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Error al obtener los datos del usuario');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            setUserData(data); // Guarda los datos completos del usuario
+            // Actualiza los estados con los datos obtenidos
+            setNombre(data.nombre || '');
+            setEmail(data.email || '');
+            setContrasena(data.contrasena || ''); 
+            setUbicacion(data.ubicacion || '');
+            setAvatar(data.avatar || '/placeholder.svg?height=100&width=100');
+          })
+          .catch((error) => console.error('Error:', error));
+      }
+    }
+  }, []);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -45,8 +66,8 @@ export default function ProfileUpdateForm({ user }: { user?: User }) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    let avatarUrl = currentUser.avatar;
-    
+    let avatarUrl = avatar;
+
     if (selectedAvatar) {
       const imageFormData = new FormData();
       imageFormData.append("file", selectedAvatar);
@@ -64,7 +85,6 @@ export default function ProfileUpdateForm({ user }: { user?: User }) {
 
         const uploadData = await uploadResponse.json();
         avatarUrl = uploadData.secure_url;
-        console.log("URL del avatar:", avatarUrl);
       } catch (error) {
         console.error("Error:", error);
         return;
@@ -74,9 +94,9 @@ export default function ProfileUpdateForm({ user }: { user?: User }) {
     try {
       const token = localStorage.getItem('token');
       const match = token && token.match(/"id":(\d+)/);
-      const idUsuario = match ? match[1] : null;
+      const userId = match ? match[1] : null;
 
-      if (idUsuario) {
+      if (userId) {
         const updateData = {
           nombre,
           email,
@@ -85,7 +105,7 @@ export default function ProfileUpdateForm({ user }: { user?: User }) {
           ubicacion,
         };
 
-        const res = await fetch(`http://localhost:8080/usuario/update/${idUsuario}`, {
+        const res = await fetch(`http://localhost:8080/usuario/update/${userId}`, {
           method: "PUT",
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updateData),
@@ -105,14 +125,6 @@ export default function ProfileUpdateForm({ user }: { user?: User }) {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-3xl mb-4">
-        <button 
-          className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" 
-          onClick={() => router.push('/user/feed')}
-        >
-          ← Regresar al feed
-        </button>
-      </div>
       <Card className="w-full max-w-md mx-auto bg-gray-800 text-gray-100 shadow-lg">
         <CardHeader className="pb-4">
           <CardTitle className="text-2xl font-bold text-center text-green-400">Actualizar Perfil</CardTitle>
@@ -126,7 +138,7 @@ export default function ProfileUpdateForm({ user }: { user?: User }) {
                 onMouseLeave={() => setHovering(false)}
               >
                 <img 
-                  src={selectedAvatar ? URL.createObjectURL(selectedAvatar) : currentUser.avatar} 
+                  src={selectedAvatar ? URL.createObjectURL(selectedAvatar) : avatar} 
                   alt="Avatar" 
                   className="w-full h-full object-cover"
                 />
@@ -142,7 +154,6 @@ export default function ProfileUpdateForm({ user }: { user?: User }) {
                   onChange={handleImageChange}
                   aria-label="Cambiar avatar"
                 />
-                <Label htmlFor="avatar-upload" className="sr-only">Cambiar avatar</Label>
               </div>
             </div>
 
