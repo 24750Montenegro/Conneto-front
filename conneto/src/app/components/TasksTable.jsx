@@ -1,12 +1,16 @@
 'use client'
-import React from 'react'
-import { FaTrash } from 'react-icons/fa';
 
-export function TasksTable({ tasks, onDeleteTask, onToggleComplete }) {
+//Se importa react de React
+import React from 'react'
+
+//Se exporta la funcion de TasksTable
+export function TasksTable({ tasks, onToggleComplete }) {
   if (!tasks || tasks.length === 0) {
+    //Se retorna que no existen tareas si no existen tareas
     return <p className="text-center text-gray-500 my-4">No hay tareas disponibles.</p>
   }
 
+  //Se devuelve el diseño de TasksTable para exportarse
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-gray-800 text-white">
