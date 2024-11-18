@@ -34,6 +34,39 @@ export default function TasksPage() {
     setUsuarioId(match ? parseInt(match[1]) : null);
   }, []);
 
+
+  const handleDeleteProject = async () => {
+    try {
+      const confirm = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción eliminará el proyecto y todas sus tareas asociadas.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Eliminar',
+      });
+  
+      if (confirm.isConfirmed) {
+        console.log('ID del proyecto:', id); // Verifica que el id se obtiene correctamente
+  
+        const response = await fetch(`http://localhost:8080/Proyecto/eliminarproyecto/${id}`, {
+          method: 'DELETE',
+        });
+  
+        if (response.ok) {
+          Swal.fire('Eliminado', 'El proyecto ha sido eliminado correctamente', 'success');
+          router.push('/user/eleccionalianza'); // Redirige al feed o página principal
+        } else {
+          throw new Error(`Error al eliminar el proyecto. Status: ${response.status}`);
+        }
+      }
+    } catch (error) {
+      console.error('Error al eliminar el proyecto:', error);
+      Swal.fire('Error', 'No se pudo eliminar el proyecto', 'error');
+    }
+  };
+  
   // Cargar tareas del proyecto al iniciar la página
   useEffect(() => {
     const fetchTasks = async () => {
@@ -135,20 +168,28 @@ export default function TasksPage() {
                 Gestor de Tareas
               </span>
           </h1> <br />
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">       {proyectoNombreDecodificado}
-          </h1>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="display flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Agregar Tarea &nbsp;
-            <BsPlusCircle
-              className="group-active:text-blue-700 transition duration-300 ease-in-out"
-              size={24}
-            />
-          </button>
+          <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">{proyectoNombreDecodificado}</h1>
+          <div className="flex space-x-4">
+            <button
+              onClick={handleDeleteProject}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Eliminar Proyecto
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="display flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Agregar Tarea &nbsp;
+              <BsPlusCircle
+                className="group-active:text-blue-700 transition duration-300 ease-in-out"
+                size={24}
+              />
+            </button>
+          </div>
         </div>
+
         {isLoading ? (
           <div className="flex justify-center items-center">
             <div className="spinner-border animate-spin border-4 border-t-4 border-blue-500 rounded-full w-8 h-8" />

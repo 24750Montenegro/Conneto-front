@@ -1,7 +1,9 @@
 'use client'
 import Head from 'next/head';
+import Swal from 'sweetalert2'; // Importar SweetAlert2
+import 'sweetalert2/dist/sweetalert2.min.css';
 import { useState, useEffect } from 'react';
-import { FaHeart, FaComment, FaLink } from 'react-icons/fa';
+import { FaHeart, FaComment, FaLink, FaTrash } from 'react-icons/fa';
 import { BsPlusCircle } from 'react-icons/bs'; // Icono para Plus con Círculo
 import { FaUserAstronaut } from 'react-icons/fa';
 import { AiFillHome, AiOutlineTeam } from 'react-icons/ai'; // Importa AiOutlineTeam para Alianza
@@ -45,6 +47,7 @@ interface Post {
   comments: Comment[];
   autor: User;
   likes: LikeUser[];
+  categorias: string[];
 }
 
 export default function Feed() {
@@ -111,6 +114,7 @@ export default function Feed() {
         }
       });
 
+  
       if (!response.ok) {
         throw new Error('Error al dar/retirar like');
       }
@@ -192,6 +196,37 @@ export default function Feed() {
 
 
 
+  const deletePost = async (postId: number) => {
+    // Mostrar alerta de confirmación
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'No podrás deshacer esta acción.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(`http://localhost:8080/publicaciones/eliminar/${postId}`, {
+          method: 'DELETE',
+        });
+  
+        if (response.ok) {
+          setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+          Swal.fire('¡Eliminada!', 'La publicación ha sido eliminada.', 'success');
+        } else {
+          throw new Error('No se pudo eliminar la publicación');
+        }
+      } catch (error) {
+        console.error('Error al eliminar publicación:', error);
+        Swal.fire('Error', 'Ocurrió un problema al eliminar la publicación.', 'error');
+      }
+    }
+  };
 
   return (
     <>
@@ -240,58 +275,68 @@ export default function Feed() {
                     <FaLink className="text-gray-500 group-hover:text-blue-500 group-active:text-blue-700 transition duration-300 ease-in-out" size={24} />
                   </button>
                 </div>
-
               </div>
-              
-              {/* Datos comentarios*/}
-              {activeComments[post.id] && comments[post.id] && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="mt-4 space-y-4"
-                >
-                  {comments[post.id].map((comment) => (
+      
+    {usuarioId === post.autor.id && ( // Mostrar el botón solo si es el autor
+      <button onClick={() => deletePost(post.id)} className="text-red-500 hover:text-red-700">
+        <FaTrash size={20} />
+      </button>
+    )}
 
-                    //Id comentario
-                    <motion.div
-                      key={comment.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.2, delay: 0.1 * comment.id }}
-                      className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out"
-                    >
-                      {/*Avatar del usuario que escribio el comentario*/}
-                      <img
-                        src={comment.avatar || "/default-avatar.jpg"}
-                        alt={`${comment.username}'s avatar`}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                      <div>
-                        {/*Nombre usuario que escribio el comentario*/}
-                        <p className="text-sm font-semibold text-white">{comment.username}</p>
-                        {/*Contenido del comentario*/}
-                        <p className="text-gray-400 text-sm">{comment.text}</p>
-                      </div>
-                    </motion.div>
-                  ))}
+    {/* Mostrar las etiquetas de categorías */}
+    <div className="mt-4 flex flex-wrap gap-2">
+    {post.categorias && post.categorias.length > 0 ? (
+      post.categorias.map((categoria, index) => (
+        <span key={index} className="bg-green-700 text-white text-sm px-2 py-1 rounded-full">
+          {categoria}
+        </span>
+      ))
+    ) : (
+      <span className="text-gray-500 text-sm">Sin categorías</span>
+    )}
+  </div>
 
-                  {/*Textbox para escribir el comentario*/}
-                  <textarea
-                    className="w-full p-2 mt-2 text-gray-300 bg-gray-800 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
-                    placeholder="Escribe un comentario..."
-                    value={newCommentText[post.id] || ''}
-                    onChange={(e) => setNewCommentText((prev) => ({ ...prev, [post.id]: e.target.value }))}
-                  />
-                  {/*Boton para guardar comentario*/}
-                  <button
-                    onClick={() => handleAddComment(post.id)}
-                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
-                  >
-                    Guardar comentario
-                  </button>
-                </motion.div>
-              )}
+
+    {activeComments[post.id] && comments[post.id] && (
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="mt-4 space-y-4"
+      >
+        {comments[post.id].map((comment) => (
+            <motion.div
+                key={comment.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: 0.1 * comment.id }}
+                className="flex items-center space-x-4 p-3 bg-gray-800 rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out"
+            >
+                <img 
+                    src={comment.avatar || "/default-avatar.jpg"} 
+                    alt={`${comment.username}'s avatar`} 
+                    className="w-10 h-10 rounded-full object-cover" 
+                />
+                <div>
+                    <p className="text-sm font-semibold text-white">{comment.username}</p>
+                    <p className="text-gray-400 text-sm">{comment.text}</p>
+                </div>
+            </motion.div>
+        ))}
+        <textarea
+            className="w-full p-2 mt-2 text-gray-300 bg-gray-800 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
+            placeholder="Escribe un comentario..."
+            value={newCommentText[post.id] || ''}
+            onChange={(e) => setNewCommentText((prev) => ({ ...prev, [post.id]: e.target.value }))}
+        />
+        <button
+            onClick={() => handleAddComment(post.id)}
+            className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200"
+        >
+            Guardar comentario
+        </button>
+    </motion.div>
+)}
 
             </div>
           ))}

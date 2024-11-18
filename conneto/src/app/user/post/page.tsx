@@ -18,24 +18,25 @@ const CreatePost = () => {
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // Tamaño máximo: 5MB
   const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
 
+  // Aquí ajustamos las categorías para incluir sus IDs
   const categories = [
-    "Fin de la pobreza",
-    "Hambre cero",
-    "Salud y bienestar",
-    "Educación de calidad",
-    "Igualdad de género",
-    "Agua limpia y saneamiento",
-    "Energía asequible y no contaminante",
-    "Trabajo decente y crecimiento económico",
-    "Industria, innovación e infraestructura",
-    "Reducción de desigualdades",
-    "Ciudades y comunidades sostenibles",
-    "Producción y consumo responsables",
-    "Acción por el clima",
-    "Vida submarina",
-    "Vida de ecosistemas terrestres",
-    "Paz, justicia e instituciones sólidas",
-    "Alianzas para lograr los objetivos"
+    { id: 1, name: "Fin de la pobreza" },
+    { id: 2, name: "Hambre cero" },
+    { id: 3, name: "Salud y bienestar" },
+    { id: 4, name: "Educación de calidad" },
+    { id: 5, name: "Igualdad de género" },
+    { id: 6, name: "Agua limpia y saneamiento" },
+    { id: 7, name: "Energía asequible y no contaminante" },
+    { id: 8, name: "Trabajo decente y crecimiento económico" },
+    { id: 9, name: "Industria, innovación e infraestructura" },
+    { id: 10, name: "Reducción de desigualdades" },
+    { id: 11, name: "Ciudades y comunidades sostenibles" },
+    { id: 12, name: "Producción y consumo responsables" },
+    { id: 13, name: "Acción por el clima" },
+    { id: 14, name: "Vida submarina" },
+    { id: 15, name: "Vida de ecosistemas terrestres" },
+    { id: 16, name: "Paz, justicia e instituciones sólidas" },
+    { id: 17, name: "Alianzas para lograr los objetivos" }
   ];
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,7 +160,8 @@ const CreatePost = () => {
       const postData = {
         contenido: description,
         imagenURL: imageUrl,
-        autor: { id: idAutor }
+        autor: { id: idAutor },
+        categorias: selectedCategories // Mapeo para categorías
       };
 
       console.log("Datos a enviar:", postData);
@@ -200,9 +202,6 @@ const CreatePost = () => {
       setIsLoading(false); // Finalizar el estado de carga
     }
   };
-  
-  
-
 
   return (
     <div className="min-h-screen bg-gray-900 text-white py-10 px-4 flex flex-col justify-center items-center">
@@ -270,25 +269,25 @@ const CreatePost = () => {
 
         {/* Selección de categorías (múltiple) */}
         <div className="mb-6">
-          <label className="block text-lg mb-2">ODS Requerido/s:</label>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id={`category-${index}`}
-                  value={cat}
-                  checked={selectedCategories.includes(cat)}
-                  onChange={() => handleCategoryChange(cat)}
-                  className="h-5 w-5 text-green-500 bg-gray-700 border-gray-600 rounded"
-                />
-                <label htmlFor={`category-${index}`} className="text-sm">
-                  {cat}
-                </label>
-              </div>
-            ))}
-          </div>
+        <label className="block text-lg mb-2">ODS Requerido/s:</label>
+        <div className="flex flex-wrap gap-2">
+          {categories.map((cat) => (
+            <div key={cat.id} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id={`category-${cat.id}`}
+                value={cat.id}
+                checked={selectedCategories.includes(String(cat.name))}
+                onChange={() => handleCategoryChange(cat.name)}
+                className="h-5 w-5 rounded-full appearance-none bg-gray-800 border border-gray-600 checked:bg-green-500 checked:border-green-500 checked:focus:ring-0 checked:ring-green-600"
+              />
+              <label htmlFor={`category-${cat.id}`} className="text-sm">
+                {cat.name}
+              </label>
+            </div>
+          ))}
         </div>
+      </div>
 
         {/* Botón de publicar */}
         <button
